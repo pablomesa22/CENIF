@@ -1,0 +1,39 @@
+match_id,fecha,jornada,local,rival,goles_favor,goles_contra,estadio,arbitro,resultado,puntos,puntos_acum
+3825567,2015-08-23,1,True,Real Madrid,0,0,Estadio Municipal El Molinón,Xavier Estrada Fernández,E,1,1
+3825573,2015-08-29,2,False,Real Sociedad,0,0,Reale Arena,José María Sánchez Martínez,E,1,2
+3825583,2015-09-12,3,True,Valencia,0,1,Estadio Municipal El Molinón,Carlos del Cerro Grande,D,0,2
+3825596,2015-09-20,4,False,RC Deportivo La Coruña,3,2,Estadio Abanca-Riazor,Eduardo Prieto Iglesias,V,3,5
+3825601,2015-09-23,5,False,Rayo Vallecano,1,2,Estadio de Vallecas,Iñaki Bikandi Garrido,D,0,5
+3825610,2015-09-27,6,True,Real Betis,1,2,Estadio Municipal El Molinón,Juan Martínez Munuera,D,0,5
+3825615,2015-10-03,7,False,Espanyol,2,1,Stage Front Stadium,Carlos Clos Gómez,V,3,8
+3825632,2015-10-19,8,True,Granada,3,3,Estadio Municipal El Molinón,Alfonso Álvarez Izquierdo,E,1,9
+3825641,2015-10-26,9,False,Athletic Club,0,3,San Mamés Barria,Ignacio Iglesias Villanueva,D,0,9
+3825649,2015-11-01,10,True,Málaga,1,0,Estadio Municipal El Molinón,Antonio Miguel Mateu Lahoz,V,3,12
+3825658,2015-11-08,11,False,Atlético Madrid,0,1,Estadio Vicente Calderón,Xavier Estrada Fernández,D,0,12
+3825668,2015-11-22,12,True,Levante UD,0,3,Estadio Municipal El Molinón,Mario Melero López,D,0,12
+3825671,2015-11-28,13,False,Celta Vigo,1,2,Abanca-Balaídos,Santiago Jaime Latre,D,0,12
+3825685,2015-12-06,14,True,Las Palmas,3,1,Estadio Municipal El Molinón,Alberto Undiano Mallenco,V,3,15
+3825692,2015-12-12,15,False,Sevilla,0,2,Estadio Ramón Sánchez Pizjuán,Carlos del Cerro Grande,D,0,15
+3825705,2015-12-30,17,False,Eibar,0,2,Estadio Municipal de Ipurúa,Carlos Velasco Carballo,D,0,15
+3825722,2016-01-04,18,True,Getafe,1,2,Estadio Municipal El Molinón,Xavier Estrada Fernández,D,0,15
+3825729,2016-01-10,19,False,Villarreal,0,2,Estadio de la Cerámica,Jesús Gil Manzano,D,0,15
+3825739,2016-01-17,20,False,Real Madrid,1,5,Bernabéu,Alberto Undiano Mallenco,D,0,15
+3825741,2016-01-22,21,True,Real Sociedad,5,1,Estadio Municipal El Molinón,David Fernández Borbalan,V,3,18
+3825755,2016-01-31,22,False,Valencia,1,0,Estadio de Mestalla,José Luis González González,V,3,21
+3825762,2016-02-06,23,True,RC Deportivo La Coruña,1,1,Estadio Municipal El Molinón,Alejandro José Hernández Hernández,E,1,22
+3825768,2016-02-12,24,True,Rayo Vallecano,2,2,Estadio Municipal El Molinón,Carlos Clos Gómez,E,1,23
+266815,2016-02-17,16,True,Barcelona,1,3,Estadio Municipal El Molinón,Desconocido,D,0,23
+3825778,2016-02-20,25,False,Real Betis,1,1,Estadio Benito Villamarín,Alfonso Álvarez Izquierdo,E,1,24
+3825790,2016-02-27,26,True,Espanyol,2,4,Estadio Municipal El Molinón,Carlos Velasco Carballo,D,0,24
+3825803,2016-03-03,27,False,Granada,0,2,Estadio Nuevo Los Cármenes,Xavier Estrada Fernández,D,0,24
+3825808,2016-03-06,28,True,Athletic Club,0,2,Estadio Municipal El Molinón,Carlos del Cerro Grande,D,0,24
+3825812,2016-03-11,29,False,Málaga,0,1,Estadio La Rosaleda,Ricardo De Burgos Bengoetxea,D,0,24
+3825907,2016-03-19,30,True,Atlético Madrid,2,1,Estadio Municipal El Molinón,Jesús Gil Manzano,V,3,27
+3825825,2016-04-04,31,False,Levante UD,0,0,Estadio Ciudad de Valencia,Mario Melero López,E,1,28
+3825832,2016-04-10,32,True,Celta Vigo,0,1,Estadio Municipal El Molinón,Antonio Miguel Mateu Lahoz,D,0,28
+3825852,2016-04-16,33,False,Las Palmas,1,1,Estadio de Gran Canaria,Alberto Undiano Mallenco,E,1,29
+3825839,2016-04-20,34,True,Sevilla,2,1,Estadio Municipal El Molinón,José Luis González González,V,3,32
+265944,2016-04-23,35,False,Barcelona,0,6,Spotify Camp Nou,Carlos Clos Gómez,D,0,32
+3825854,2016-04-29,36,True,Eibar,2,0,Estadio Municipal El Molinón,Alejandro José Hernández Hernández,V,3,35
+3825865,2016-05-08,37,False,Getafe,1,1,Coliseum Alfonso Pérez,Alfonso Álvarez Izquierdo,E,1,36
+3825900,2016-05-15,38,True,Villarreal,2,0,Estadio Municipal El Molinón,Alberto Undiano Mallenco,V,3,39

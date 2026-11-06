@@ -1,0 +1,6 @@
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+
+# Soluciones: solo para el docente. Quita esta línea cuando quieras publicarlas.
+docente/
