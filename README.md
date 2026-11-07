@@ -9,7 +9,7 @@ Caso práctico: **Real Sporting de Gijón, temporada 2015/16** (La Liga), con da
 | Carpeta | Qué hay |
 |---|---|
 | `slides/` | Diapositivas del curso: PDF (`Big-Data-e-IA_Bloques-1-y-2.pdf`) y versión web (`diapositivas.html`, ábrela en el navegador). |
-| `notebooks/` | Cuadernos de práctica (`01`–`05`, para Google Colab) y script de Databricks (`02_…py`). |
+| `notebooks/` | Cuadernos de práctica (`01`–`05`, para Google Colab) y scripts de Databricks (`02_…py` y `02b_…` de streaming, en `.py` y `.ipynb`). |
 | `data/` | `sporting_partidos.csv` (38 partidos) y `sporting_eventos.csv` (≈129.000 eventos). |
 
 ## Cómo usar los cuadernos
@@ -18,6 +18,7 @@ Caso práctico: **Real Sporting de Gijón, temporada 2015/16** (La Liga), con da
 2. **Archivo → Subir cuaderno** y elige un fichero de `notebooks/` (o **Archivo → Abrir cuaderno → GitHub** si el repositorio está publicado).
 3. Ejecuta las celdas en orden. El cuaderno 01 descarga los datos de StatsBomb y genera los CSV; si prefieres no esperar, sube los de `data/` al panel de ficheros de Colab (icono de carpeta).
 4. El script `02_BigData_Databricks_Spark_Sporting.py` es para Databricks Community/Free Edition: importa el fichero y sube los CSV a `/FileStore/tables/`.
+5. `02b_BigData_Streaming_Databricks` (ampliación del Bloque 3) lee un flujo real de Wikimedia EventStreams y simula un partido del Sporting. Requiere acceso saliente a `stream.wikimedia.org` desde tu espacio de trabajo; en Free Edition solo funciona con `trigger(availableNow=True)`.
 
 ## Datos y licencia
 
