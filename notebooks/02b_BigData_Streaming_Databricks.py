@@ -60,7 +60,7 @@ r.close()
 # MAGIC Una función lee el flujo durante unos segundos y guarda los eventos en **un fichero JSON por captura**
 # MAGIC dentro del volumen. Cada fichero es un "trozo" nuevo que Spark verá llegar.
 # MAGIC
-# MAGIC Para el caso de las ventanas de tiempo (sección 8) conviene capturar **más de un minuto**.
+# MAGIC Para el caso de las ventanas de tiempo (sección 9) conviene capturar **más de un minuto**.
 
 # COMMAND ----------
 
@@ -173,7 +173,64 @@ lanzar(leer_wiki(), "wiki_cambios", "copia")
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 6. Caso 2: filtrar el flujo
+# MAGIC ## 6. Verlo crecer: datos nuevos ronda a ronda
+# MAGIC
+# MAGIC Con cómputo serverless el flujo no se queda escuchando, pero podemos **simular el tiempo real** repitiendo un ciclo:
+# MAGIC llegan datos nuevos (captura de unos segundos) → Spark procesa **solo lo nuevo** → miramos cómo han cambiado las tablas.
+# MAGIC
+# MAGIC En cada ronda verás:
+# MAGIC - cuántas **filas nuevas** han entrado y el **total** acumulado (la tabla crece),
+# MAGIC - el **% de cambios hechos por bots** (un resultado con estado que se va actualizando),
+# MAGIC - las **3 Wikipedias** con más actividad.
+# MAGIC
+# MAGIC Dura unos 2-3 minutos (6 rondas). Mientras corre, la celda va escribiendo una línea por ronda.
+
+# COMMAND ----------
+
+def demo_en_vivo(rondas=6, segundos=10):
+    tabla_copia = f"{CATALOGO}.{ESQUEMA}.wiki_cambios"
+    por_tipo = (leer_wiki().groupBy("type", "bot").agg(F.count("*").alias("cambios")))
+    antes = spark.table(tabla_copia).count() if spark.catalog.tableExists(tabla_copia) else 0
+    historial = []
+    for ronda in range(1, rondas + 1):
+        capturar(segundos=segundos)                          # 1) llegan datos nuevos
+        lanzar(leer_wiki(), "wiki_cambios", "copia")         # 2) Spark lee solo los ficheros nuevos
+        lanzar(por_tipo, "wiki_por_tipo", "por_tipo", modo="complete")
+
+        copia = spark.table(tabla_copia)
+        total = copia.count()
+        nuevos = total - antes
+        antes = total
+        bots = copia.filter(F.col("bot") == True).count()
+        pct_bots = round(100 * bots / total, 1) if total else 0.0
+        top3 = [f"{r['wiki']} ({r['count']})" for r in copia.groupBy("wiki").count().orderBy(F.desc("count")).limit(3).collect()]
+        historial.append((ronda, total, nuevos, pct_bots))
+
+        print(f"--- Ronda {ronda} · {time.strftime('%H:%M:%S')} ---")
+        print(f"  filas nuevas: {nuevos:>5} {'█' * min(60, nuevos // 20)}")
+        print(f"  total tabla : {total:>5}")
+        print(f"  % bots      : {pct_bots}%")
+        print(f"  top 3 wikis : {', '.join(top3)}")
+    return historial
+
+historial = demo_en_vivo(rondas=6, segundos=10)
+
+# COMMAND ----------
+
+# La evolución en una tabla (pulsa "+" en el resultado para crear un gráfico de líneas con total por ronda)
+display(spark.createDataFrame(historial, "ronda int, total long, nuevos long, pct_bots double"))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC **Pregunta:** ¿por qué cada ronda tarda lo mismo aunque la tabla ya sea más grande?
+# MAGIC **Respuesta:** porque Spark solo procesa los ficheros nuevos; el checkpoint ya recuerda los anteriores.
+# MAGIC **Conclusión:** así se ve un flujo: la tabla crece con cada llegada y los resultados con estado (% de bots) se actualizan sin recalcular el histórico.
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## 7. Caso 2: filtrar el flujo
 # MAGIC
 # MAGIC Una consulta **sin estado**: cada evento se mira por separado. Nos quedamos con las **ediciones hechas por personas**
 # MAGIC (no bots) en las Wikipedias en inglés, español y francés.
@@ -191,7 +248,7 @@ display(spark.table(f"{CATALOGO}.{ESQUEMA}.wiki_ediciones_humanas").orderBy(F.de
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 7. Caso 3: contar por tipo de cambio y por bot
+# MAGIC ## 8. Caso 3: contar por tipo de cambio y por bot
 # MAGIC
 # MAGIC Ahora una consulta **con estado**: Spark tiene que recordar los conteos entre lotes.
 # MAGIC Usamos `outputMode("complete")`: en cada lote se reescribe el resultado completo.
@@ -216,7 +273,7 @@ display(spark.table(f"{CATALOGO}.{ESQUEMA}.wiki_por_tipo").orderBy(F.desc("cambi
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 8. Caso 4: ventanas de tiempo
+# MAGIC ## 9. Caso 4: ventanas de tiempo
 # MAGIC
 # MAGIC En streaming casi siempre se pregunta *"¿cuántos por minuto?"*. Se hace con una **ventana** sobre la hora del evento
 # MAGIC (`window`). Aquí contamos cambios por ventana de 1 minuto.
@@ -242,7 +299,7 @@ display(spark.table(f"{CATALOGO}.{ESQUEMA}.wiki_por_minuto")
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 9. Varias consultas, una sola fuente
+# MAGIC ## 10. Varias consultas, una sola fuente
 # MAGIC
 # MAGIC Hemos lanzado **cuatro consultas** sobre la misma carpeta. Cada una tiene su **propio checkpoint** (`ck_copia`,
 # MAGIC `ck_humanas`, `ck_por_tipo`, `ck_por_minuto`), así que cada una avanza a su ritmo.
@@ -252,7 +309,7 @@ display(spark.table(f"{CATALOGO}.{ESQUEMA}.wiki_por_minuto")
 # MAGIC **Conclusión:** una misma fuente puede alimentar muchas consultas independientes; el checkpoint es lo que las separa.
 # MAGIC
 # MAGIC ---
-# MAGIC ## 10. Limpieza (opcional)
+# MAGIC ## 11. Limpieza (opcional)
 
 # COMMAND ----------
 
