@@ -3,18 +3,19 @@
 # MAGIC # Curso de Big Data e IA · Módulo 1
 # MAGIC ## Bloque 3 (ampliación): Streaming con Spark en Databricks
 # MAGIC
-# MAGIC **Duración estimada:** 45-60 minutos
+# MAGIC **Duración estimada:** 60 minutos
 # MAGIC
 # MAGIC **Qué haremos:**
 # MAGIC 1. Leer un **flujo real y gratuito** (cambios en Wikipedia, de Wikimedia EventStreams) y guardarlo en ficheros.
 # MAGIC 2. Procesarlo con **Structured Streaming** y ver cómo Spark solo procesa lo nuevo.
-# MAGIC 3. Repetir la idea con el **Sporting**: reproducir un partido minuto a minuto y acumular el xG.
+# MAGIC 3. Resolver **varios casos** sobre el mismo flujo: copia limpia, filtro, conteos y ventanas de tiempo.
 # MAGIC
 # MAGIC **Importante:** en Databricks Free Edition solo hay cómputo *serverless*, que solo admite el disparador
 # MAGIC `availableNow` (procesa todo lo pendiente y termina). No hay flujos que se queden escuchando para siempre.
 # MAGIC Para eso se necesitaría un clúster propio.
 # MAGIC
-# MAGIC **Datos del Sporting:** StatsBomb Open Data (https://github.com/statsbomb/open-data). Si compartes análisis, cita StatsBomb.
+# MAGIC **Si tu espacio de trabajo no llega a Wikimedia:** el docente puede compartir un fichero ya capturado.
+# MAGIC Súbelo a la carpeta `wiki_eventos` del volumen (sección 1) y salta la sección 3.
 
 # COMMAND ----------
 
@@ -58,12 +59,14 @@ r.close()
 # MAGIC
 # MAGIC Una función lee el flujo durante unos segundos y guarda los eventos en **un fichero JSON por captura**
 # MAGIC dentro del volumen. Cada fichero es un "trozo" nuevo que Spark verá llegar.
+# MAGIC
+# MAGIC Para el caso de las ventanas de tiempo (sección 8) conviene capturar **más de un minuto**.
 
 # COMMAND ----------
 
 import json, time, os
 
-def capturar(segundos=20, max_eventos=2000):
+def capturar(segundos=20, max_eventos=5000):
     """Lee el flujo de Wikimedia y guarda un fichero JSON (una línea por evento)."""
     destino = f"{BASE}/wiki_eventos"
     os.makedirs(destino, exist_ok=True)
@@ -78,12 +81,17 @@ def capturar(segundos=20, max_eventos=2000):
                 break
     print(f"{n} eventos guardados en {ruta}")
 
-capturar(segundos=20)
+capturar(segundos=75)
 
 # COMMAND ----------
 
 # Mira qué hay en la carpeta
 display(dbutils.fs.ls(f"{BASE}/wiki_eventos"))
+
+# COMMAND ----------
+
+# Un vistazo a los eventos en crudo (lectura normal, no streaming)
+display(spark.read.json(f"{BASE}/wiki_eventos").select("wiki", "type", "title", "user", "bot", "timestamp").limit(10))
 
 # COMMAND ----------
 
@@ -95,8 +103,10 @@ display(dbutils.fs.ls(f"{BASE}/wiki_eventos"))
 # MAGIC
 # MAGIC - `readStream` en lugar de `read`.
 # MAGIC - Un **esquema** explícito (un flujo no puede inferirlo bien).
-# MAGIC - Un **checkpoint**: Spark apunta qué ficheros ya procesó. Así, al relanzar, solo lee lo nuevo.
+# MAGIC - Un **checkpoint** por consulta: Spark apunta qué ficheros ya procesó. Así, al relanzar, solo lee lo nuevo.
 # MAGIC - `trigger(availableNow=True)`: procesa todo lo pendiente y termina (el único modo que admite serverless).
+# MAGIC
+# MAGIC Definimos dos funciones que reutilizaremos en todos los casos: una que **lee** el flujo y otra que lo **lanza**.
 
 # COMMAND ----------
 
@@ -113,37 +123,42 @@ esquema_wiki = StructType([
     StructField("timestamp",   LongType()),
 ])
 
-TABLA_WIKI = f"{CATALOGO}.{ESQUEMA}.wiki_cambios"
+def leer_wiki():
+    """Flujo de la carpeta de capturas, con una columna de fecha legible."""
+    return (spark.readStream
+            .schema(esquema_wiki)
+            .json(f"{BASE}/wiki_eventos")
+            .withColumn("instante", F.to_timestamp(F.from_unixtime("timestamp"))))
 
-def procesar_wiki():
-    flujo = (spark.readStream
-             .schema(esquema_wiki)
-             .json(f"{BASE}/wiki_eventos"))
-
-    consulta = (flujo
-                .withColumn("instante", F.to_timestamp(F.from_unixtime("timestamp")))
-                .writeStream
-                .option("checkpointLocation", f"{BASE}/checkpoint_wiki")
+def lanzar(flujo, tabla, nombre, modo="append"):
+    """Escribe el flujo en una tabla Delta. Cada consulta tiene su propio checkpoint."""
+    consulta = (flujo.writeStream
+                .outputMode(modo)
+                .option("checkpointLocation", f"{BASE}/ck_{nombre}")
                 .trigger(availableNow=True)
-                .toTable(TABLA_WIKI))
+                .toTable(f"{CATALOGO}.{ESQUEMA}.{tabla}"))
     consulta.awaitTermination()
-    print("Filas en la tabla:", spark.table(TABLA_WIKI).count())
-
-procesar_wiki()
+    print(f"{tabla}: {spark.table(f'{CATALOGO}.{ESQUEMA}.{tabla}').count()} filas")
 
 # COMMAND ----------
 
-# Consulta normal sobre la tabla que ha ido llenando el flujo
-display(spark.table(TABLA_WIKI)
-        .groupBy("wiki").count()
-        .orderBy(F.desc("count")).limit(10))
+# MAGIC %md
+# MAGIC ## 5. Caso 1: copia limpia del flujo
+# MAGIC
+# MAGIC El caso más básico y el más usado en la práctica: guardar lo que llega, con sus tipos, en una tabla.
+# MAGIC Es el equivalente a la capa **bronce** de la arquitectura medallón.
+
+# COMMAND ----------
+
+lanzar(leer_wiki(), "wiki_cambios", "copia")
+display(spark.table(f"{CATALOGO}.{ESQUEMA}.wiki_cambios").groupBy("wiki").count().orderBy(F.desc("count")).limit(10))
 
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC ### Prueba del checkpoint
 # MAGIC 1. Vuelve a ejecutar la celda de **captura** (sección 3): se crea un fichero nuevo.
-# MAGIC 2. Ejecuta otra vez `procesar_wiki()`.
+# MAGIC 2. Ejecuta otra vez la celda del caso 1.
 # MAGIC 3. Mira cuántas filas había antes y cuántas hay ahora.
 # MAGIC
 # MAGIC **Pregunta:** ¿Spark ha vuelto a leer los eventos de la primera captura?
@@ -153,97 +168,96 @@ display(spark.table(TABLA_WIKI)
 # COMMAND ----------
 
 capturar(segundos=20)
-procesar_wiki()
+lanzar(leer_wiki(), "wiki_cambios", "copia")
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 5. Lo mismo con el Sporting: un partido "en directo" simulado
+# MAGIC ## 6. Caso 2: filtrar el flujo
 # MAGIC
-# MAGIC No hay un flujo gratuito de fútbol, así que **reproducimos un partido** de los datos de StatsBomb:
-# MAGIC guardamos los tiros de cada tramo de 10 minutos en un fichero distinto, como si fueran llegando.
-# MAGIC Spark los lee de uno en uno (`maxFilesPerTrigger=1`) y va **acumulando el xG** de cada equipo.
-# MAGIC
-# MAGIC Necesitas los CSV del Notebook 1, subidos como en el Notebook 2.
+# MAGIC Una consulta **sin estado**: cada evento se mira por separado. Nos quedamos con las **ediciones hechas por personas**
+# MAGIC (no bots) en las Wikipedias en inglés, español y francés.
 
 # COMMAND ----------
 
-# AJUSTA esta ruta a donde hayas subido el fichero (la misma que en el Notebook 2)
-ruta_eventos = "/FileStore/tables/sporting_eventos.csv"
+humanas = (leer_wiki()
+           .filter((F.col("type") == "edit") & (F.col("bot") == False)
+                   & F.col("wiki").isin("enwiki", "eswiki", "frwiki"))
+           .select("instante", "wiki", "title", "user"))
 
-eventos = (spark.read.option("header", "true").option("inferSchema", "true").csv(ruta_eventos))
+lanzar(humanas, "wiki_ediciones_humanas", "humanas")
+display(spark.table(f"{CATALOGO}.{ESQUEMA}.wiki_ediciones_humanas").orderBy(F.desc("instante")).limit(10))
 
-partido = eventos.select("match_id").first()[0]
-tiros = (eventos
-         .filter((F.col("match_id") == partido) & (F.col("type") == "Shot"))
-         .select("minute", "team", "player", "shot_xg", "shot_outcome")
-         .toPandas())
-print(f"Partido {partido}: {len(tiros)} tiros")
-tiros.head()
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## 7. Caso 3: contar por tipo de cambio y por bot
+# MAGIC
+# MAGIC Ahora una consulta **con estado**: Spark tiene que recordar los conteos entre lotes.
+# MAGIC Usamos `outputMode("complete")`: en cada lote se reescribe el resultado completo.
+# MAGIC
+# MAGIC **Pregunta:** ¿qué proporción de los cambios los hacen bots?
+
+# COMMAND ----------
+
+por_tipo = (leer_wiki()
+            .groupBy("type", "bot")
+            .agg(F.count("*").alias("cambios")))
+
+lanzar(por_tipo, "wiki_por_tipo", "por_tipo", modo="complete")
+display(spark.table(f"{CATALOGO}.{ESQUEMA}.wiki_por_tipo").orderBy(F.desc("cambios")))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC **Respuesta:** la que salga en tu tabla (depende del momento de la captura).
+# MAGIC **Conclusión:** un conteo en streaming es un `groupBy` normal; Spark guarda el estado y lo actualiza con cada lote.
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## 8. Caso 4: ventanas de tiempo
+# MAGIC
+# MAGIC En streaming casi siempre se pregunta *"¿cuántos por minuto?"*. Se hace con una **ventana** sobre la hora del evento
+# MAGIC (`window`). Aquí contamos cambios por ventana de 1 minuto.
+
+# COMMAND ----------
+
+por_minuto = (leer_wiki()
+              .groupBy(F.window("instante", "1 minute"))
+              .agg(F.count("*").alias("cambios")))
+
+lanzar(por_minuto, "wiki_por_minuto", "por_minuto", modo="complete")
+display(spark.table(f"{CATALOGO}.{ESQUEMA}.wiki_por_minuto")
+        .select(F.col("window.start").alias("minuto"), "cambios")
+        .orderBy("minuto"))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC **Pregunta:** ¿hay minutos con muchos más cambios que otros?
+# MAGIC **Respuesta:** míralo en la tabla: la actividad de Wikipedia varía durante el día y entre minutos.
+# MAGIC **Conclusión:** las ventanas convierten un flujo de eventos sueltos en una serie temporal, lista para un gráfico o una alerta.
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## 9. Varias consultas, una sola fuente
+# MAGIC
+# MAGIC Hemos lanzado **cuatro consultas** sobre la misma carpeta. Cada una tiene su **propio checkpoint** (`ck_copia`,
+# MAGIC `ck_humanas`, `ck_por_tipo`, `ck_por_minuto`), así que cada una avanza a su ritmo.
+# MAGIC
+# MAGIC Prueba: ejecuta otra **captura** y relanza **solo una** de las consultas. Las demás tablas no cambian hasta que las relances.
+# MAGIC
+# MAGIC **Conclusión:** una misma fuente puede alimentar muchas consultas independientes; el checkpoint es lo que las separa.
+# MAGIC
+# MAGIC ---
+# MAGIC ## 10. Limpieza (opcional)
 
 # COMMAND ----------
 
 import shutil
-carpeta_sim = f"{BASE}/partido_sim"
-shutil.rmtree(carpeta_sim, ignore_errors=True)
-os.makedirs(carpeta_sim)
-
-# Un fichero por cada tramo de 10 minutos
-for tramo in range(0, 100, 10):
-    parte = tiros[(tiros["minute"] >= tramo) & (tiros["minute"] < tramo + 10)]
-    if len(parte):
-        parte.to_json(f"{carpeta_sim}/tramo_{tramo:03d}.json", orient="records", lines=True)
-
-display(dbutils.fs.ls(carpeta_sim))
-
-# COMMAND ----------
-
-from pyspark.sql.types import DoubleType
-
-esquema_tiros = StructType([
-    StructField("minute",       LongType()),
-    StructField("team",         StringType()),
-    StructField("player",       StringType()),
-    StructField("shot_xg",      DoubleType()),
-    StructField("shot_outcome", StringType()),
-])
-
-TABLA_XG = f"{CATALOGO}.{ESQUEMA}.sim_xg_equipo"
-shutil.rmtree(f"{BASE}/checkpoint_xg", ignore_errors=True)
-spark.sql(f"DROP TABLE IF EXISTS {TABLA_XG}")
-
-flujo = (spark.readStream
-         .schema(esquema_tiros)
-         .option("maxFilesPerTrigger", 1)          # un tramo por micro-lote
-         .json(carpeta_sim))
-
-acumulado = (flujo.groupBy("team")
-             .agg(F.count("*").alias("tiros"), F.round(F.sum("shot_xg"), 2).alias("xg")))
-
-consulta = (acumulado.writeStream
-            .outputMode("complete")                 # reescribe el acumulado completo en cada lote
-            .option("checkpointLocation", f"{BASE}/checkpoint_xg")
-            .trigger(availableNow=True)
-            .toTable(TABLA_XG))
-consulta.awaitTermination()
-
-for p in consulta.recentProgress:
-    print("lote", p["batchId"], "· filas leídas:", p["numInputRows"])
-display(spark.table(TABLA_XG).orderBy(F.desc("xg")))
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC **Pregunta:** ¿por qué hay varios lotes si lanzamos la consulta una sola vez?
-# MAGIC **Respuesta:** `maxFilesPerTrigger=1` obliga a leer un fichero por lote; cada lote actualiza el acumulado.
-# MAGIC **Conclusión:** un flujo es una secuencia de micro-lotes sobre una tabla que crece, y el estado (aquí, el xG acumulado) se mantiene entre lotes.
-# MAGIC
-# MAGIC ---
-# MAGIC ## 6. Limpieza (opcional)
-
-# COMMAND ----------
-
-spark.sql(f"DROP TABLE IF EXISTS {TABLA_WIKI}")
-spark.sql(f"DROP TABLE IF EXISTS {TABLA_XG}")
-for c in ("checkpoint_wiki", "checkpoint_xg", "wiki_eventos", "partido_sim"):
+for t in ("wiki_cambios", "wiki_ediciones_humanas", "wiki_por_tipo", "wiki_por_minuto"):
+    spark.sql(f"DROP TABLE IF EXISTS {CATALOGO}.{ESQUEMA}.{t}")
+for c in ("ck_copia", "ck_humanas", "ck_por_tipo", "ck_por_minuto", "wiki_eventos"):
     shutil.rmtree(f"{BASE}/{c}", ignore_errors=True)

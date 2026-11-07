@@ -18,7 +18,7 @@ Caso práctico: **Real Sporting de Gijón, temporada 2015/16** (La Liga), con da
 2. **Archivo → Subir cuaderno** y elige un fichero de `notebooks/` (o **Archivo → Abrir cuaderno → GitHub** si el repositorio está publicado).
 3. Ejecuta las celdas en orden. El cuaderno 01 descarga los datos de StatsBomb y genera los CSV; si prefieres no esperar, sube los de `data/` al panel de ficheros de Colab (icono de carpeta).
 4. El script `02_BigData_Databricks_Spark_Sporting.py` es para Databricks Community/Free Edition: importa el fichero y sube los CSV a `/FileStore/tables/`.
-5. `02b_BigData_Streaming_Databricks` (ampliación del Bloque 3) lee un flujo real de Wikimedia EventStreams y simula un partido del Sporting. Requiere acceso saliente a `stream.wikimedia.org` desde tu espacio de trabajo; en Free Edition solo funciona con `trigger(availableNow=True)`.
+5. `02b_BigData_Streaming_Databricks` (ampliación del Bloque 3) lee un flujo real de Wikimedia EventStreams y resuelve cuatro casos (copia, filtro, conteo y ventanas). Requiere acceso saliente a `stream.wikimedia.org` desde tu espacio de trabajo; en Free Edition solo funciona con `trigger(availableNow=True)`.
 
 ## Datos y licencia
 
