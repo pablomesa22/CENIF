@@ -688,6 +688,61 @@ print("Tamaño medio (bytes):", round(sum(f.size for f in ficheros) / max(len(fi
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ## 13. Verlo en vivo, evento a evento
+# MAGIC
+# MAGIC Hasta ahora hemos trabajado con capturas. Aquí ves el flujo **tal como llega**. En **Databricks Free (serverless) no se puede dejar
+# MAGIC una consulta de Structured Streaming ejecutándose de forma continua** (solo `availableNow`), así que lo hacemos de dos maneras:
+# MAGIC 1. Leer el flujo directamente y escribir cada evento según llega (sin Spark).
+# MAGIC 2. Repetir *captura + lectura con Spark* en rondas cortas y ver crecer los contadores (microlotes hechos a mano).
+
+# COMMAND ----------
+
+# 13.1 Cada evento, línea a línea, durante 30 segundos
+inicio, n = time.time(), 0
+with requests.get(URL, headers=CABECERAS, stream=True, timeout=(10, 30)) as r:
+    for linea in r.iter_lines():
+        if not linea.startswith(b"data:"):
+            continue
+        try:
+            e = json.loads(linea[5:].decode("utf-8"))
+        except ValueError:
+            continue
+        n += 1
+        print(f"{time.strftime('%H:%M:%S')}  {e.get('wiki','?'):<12} {e.get('type','?'):<10} {str(e.get('user','?'))[:18]:<18} {str(e.get('title',''))[:50]}", flush=True)
+        if time.time() - inicio > 30:
+            break
+print(f"--- {n} eventos en 30 s ---")
+
+# COMMAND ----------
+
+# 13.2 Contadores que crecen: cada ronda captura 10 s y vuelve a leer todo con Spark
+from IPython.display import clear_output
+carpeta = f"{BASE}/wiki_vivo"
+os.makedirs(carpeta, exist_ok=True)
+for ronda in range(1, 7):
+    ruta = f"{carpeta}/captura_{int(time.time())}.json"
+    inicio = time.time()
+    with requests.get(URL, headers=CABECERAS, stream=True, timeout=(10, 30)) as r, open(ruta, "w") as f:
+        for linea in r.iter_lines():
+            if linea.startswith(b"data:"):
+                f.write(linea[5:].decode("utf-8").strip() + "\n")
+            if time.time() - inicio > 10:
+                break
+    vivo = spark.read.schema(esquema_wiki).json(carpeta)
+    clear_output(wait=True)
+    print(f"Ronda {ronda}/6 · {time.strftime('%H:%M:%S')} · eventos acumulados: {vivo.count()}")
+    vivo.groupBy("wiki").count().orderBy(F.desc("count")).show(5)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC **Pregunta:** ¿esto es streaming de verdad?
+# MAGIC **Respuesta:** la 13.1 sí lee el flujo en directo, pero sin Spark. La 13.2 son microlotes que lanzamos nosotros; Structured Streaming hace lo mismo solo, con un checkpoint, cuando el cluster lo permite.
+# MAGIC **Conclusión:** en Free usamos `availableNow` y bucles; en un cluster normal, `trigger(processingTime=...)` mantiene la consulta viva.
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC ## Ejercicio propuesto
 # MAGIC 1. Calcula el porcentaje de cambios hechos por bots en cada proyecto y muestra los 5 con mayor porcentaje (con al menos 20 cambios).
 # MAGIC 2. ¿Cuántos cambios hay de cada tipo (`edit`, `new`, `log`, `categorize`...) en cada ventana de 1 minuto? Usa la sección 11.5 como modelo.
@@ -704,5 +759,5 @@ print("Tamaño medio (bytes):", round(sum(f.size for f in ficheros) / max(len(fi
 import shutil
 for t in ("wiki_cambios", "wiki_ediciones_humanas", "wiki_por_tipo", "wiki_por_minuto", "resumen_ediciones_por_wiki"):
     spark.sql(f"DROP TABLE IF EXISTS {CATALOGO}.{ESQUEMA}.{t}")
-for c in ("ck_copia", "ck_humanas", "ck_por_tipo", "ck_por_minuto", "wiki_eventos", "salida_parquet", "salida_un_fichero", "salida_por_wiki", "salida_avro"):
+for c in ("ck_copia", "ck_humanas", "ck_por_tipo", "ck_por_minuto", "wiki_eventos", "salida_parquet", "salida_un_fichero", "salida_por_wiki", "salida_avro", "wiki_vivo"):
     shutil.rmtree(f"{BASE}/{c}", ignore_errors=True)
