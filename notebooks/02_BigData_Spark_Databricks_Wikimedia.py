@@ -290,6 +290,62 @@ display(spark.table(f"{CATALOGO}.{ESQUEMA}.resumen_ediciones_por_wiki").orderBy(
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ### 10.1 La caché tiene un coste
+# MAGIC `cache()` ocupa memoria que luego falta para ejecutar. Mira dónde la guarda Spark y libérala cuando ya no la uses.
+
+# COMMAND ----------
+
+print("Nivel de almacenamiento:", ediciones.storageLevel)   # memoria y disco
+ediciones.unpersist()                                       # libera la memoria
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### 10.2 Formatos de guardado: Parquet, Avro y Delta
+# MAGIC - **Parquet**: por columnas, con esquema y compresión (snappy por defecto). Es el estándar para analítica.
+# MAGIC - **Avro**: por filas, con el esquema en el fichero. Se usa para mover registros entre sistemas (por ejemplo con Kafka).
+# MAGIC - **Delta**: ficheros Parquet más un registro de transacciones (versiones, escrituras atómicas). Es el formato por defecto de las tablas en Databricks.
+# MAGIC
+# MAGIC **Cuidado con los ficheros:** Spark escribe una *carpeta* con un fichero por partición. Mira qué sale.
+
+# COMMAND ----------
+
+ruta = f"{BASE}/salida_parquet"
+resumen.write.mode("overwrite").parquet(ruta)
+display(dbutils.fs.ls(ruta))                     # _SUCCESS y uno o varios ficheros part-...
+
+ruta_uno = f"{BASE}/salida_un_fichero"
+resumen.coalesce(1).write.mode("overwrite").parquet(ruta_uno)   # un único fichero part
+display(dbutils.fs.ls(ruta_uno))
+
+ruta_wiki = f"{BASE}/salida_por_wiki"
+cambios.write.mode("overwrite").partitionBy("wiki").parquet(ruta_wiki)   # una carpeta por wiki
+display(dbutils.fs.ls(ruta_wiki))
+
+# COMMAND ----------
+
+# Avro: es un módulo externo; si tu entorno no lo trae, lo verás en el mensaje
+try:
+    resumen.write.mode("overwrite").format("avro").save(f"{BASE}/salida_avro")
+    display(spark.read.format("avro").load(f"{BASE}/salida_avro"))
+except Exception as e:
+    print("Avro no disponible en este entorno:", str(e)[:200])
+
+# COMMAND ----------
+
+# Delta: cada escritura crea una versión de la tabla
+display(spark.sql(f"DESCRIBE HISTORY {CATALOGO}.{ESQUEMA}.resumen_ediciones_por_wiki"))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC **Pregunta:** si guardas un resultado con Spark y salen varios ficheros, ¿qué ha pasado?
+# MAGIC **Respuesta:** había varias particiones y cada una escribió el suyo.
+# MAGIC **Conclusión:** para analítica, Parquet o Delta; piensa en cuántos ficheros salen antes de escribir.
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC ## 11. Structured Streaming: leer la carpeta como un flujo
 # MAGIC
 # MAGIC Spark trata el flujo como **una tabla que no deja de crecer**. Tú escribes la consulta igual que con un DataFrame
@@ -633,5 +689,5 @@ print("Tamaño medio (bytes):", round(sum(f.size for f in ficheros) / max(len(fi
 import shutil
 for t in ("wiki_cambios", "wiki_ediciones_humanas", "wiki_por_tipo", "wiki_por_minuto", "resumen_ediciones_por_wiki"):
     spark.sql(f"DROP TABLE IF EXISTS {CATALOGO}.{ESQUEMA}.{t}")
-for c in ("ck_copia", "ck_humanas", "ck_por_tipo", "ck_por_minuto", "wiki_eventos"):
+for c in ("ck_copia", "ck_humanas", "ck_por_tipo", "ck_por_minuto", "wiki_eventos", "salida_parquet", "salida_un_fichero", "salida_por_wiki", "salida_avro"):
     shutil.rmtree(f"{BASE}/{c}", ignore_errors=True)
