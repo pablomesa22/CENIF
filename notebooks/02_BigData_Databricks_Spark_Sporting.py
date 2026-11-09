@@ -15,13 +15,20 @@
 # MAGIC - Cargar los CSV generados en el Notebook 1 en DataFrames de Spark.
 # MAGIC - Hacer filtros, agregaciones, joins y funciones de ventana.
 # MAGIC - Usar SQL sobre los mismos datos.
+# MAGIC - Leer un plan de ejecucion (`explain`) y reconocer errores tipicos de los jobs de Spark.
 # MAGIC
 # MAGIC ---
 # MAGIC ### Preparacion en Databricks (version gratuita)
 # MAGIC 1. Crea una cuenta gratuita en Databricks y abre un notebook (Workspace > Import, y selecciona este `.py`).
-# MAGIC 2. Sube `sporting_partidos.csv` y `sporting_eventos.csv` (generados en el Notebook 1) desde
-# MAGIC    **Catalog / Add data / Upload files** (o Data > Add Data en versiones anteriores).
-# MAGIC 3. Anota la ruta que te muestra Databricks y ponla en las variables de la celda siguiente.
+# MAGIC 2. Ejecuta la celda de configuracion de la seccion 2: crea un **volumen** (una carpeta gobernada por Unity Catalog).
+# MAGIC 3. Sube `sporting_partidos.csv` y `sporting_eventos.csv` (generados en el Notebook 1) a ese volumen desde
+# MAGIC    **Catalog > tu catalogo > tu esquema > el volumen > Upload to this volume**.
+# MAGIC 4. Comprueba con la celda de la seccion 2 que Spark ve los dos ficheros.
+# MAGIC
+# MAGIC > En Databricks Free Edition el calculo es *serverless*: no hay Spark UI ni API de RDD, y la cache solo funciona con `df.cache()`.
+# MAGIC > La ruta antigua `/FileStore/...` puede no estar disponible; por eso usamos volumenes.
+# MAGIC
+# MAGIC Despues de este notebook, en casa: `02b_BigData_Streaming_Databricks` (streaming con datos reales de Wikimedia).
 
 # COMMAND ----------
 
@@ -42,9 +49,20 @@
 
 # COMMAND ----------
 
-# AJUSTA estas rutas a donde hayas subido los ficheros
-ruta_eventos  = "/FileStore/tables/sporting_eventos.csv"
-ruta_partidos = "/FileStore/tables/sporting_partidos.csv"
+# AJUSTA estos nombres si tu catalogo o esquema son otros (Catalog en el menu lateral)
+CATALOGO = "workspace"
+ESQUEMA  = "default"
+VOLUMEN  = "sporting"
+
+spark.sql(f"CREATE VOLUME IF NOT EXISTS {CATALOGO}.{ESQUEMA}.{VOLUMEN}")
+BASE = f"/Volumes/{CATALOGO}/{ESQUEMA}/{VOLUMEN}"
+print("Sube los CSV a:", BASE)
+display(dbutils.fs.ls(BASE))   # deben aparecer sporting_eventos.csv y sporting_partidos.csv
+
+# COMMAND ----------
+
+ruta_eventos  = f"{BASE}/sporting_eventos.csv"
+ruta_partidos = f"{BASE}/sporting_partidos.csv"
 
 eventos = (spark.read
            .option("header", "true")
@@ -89,6 +107,19 @@ from pyspark.sql.window import Window
  .count()
  .orderBy(F.desc("count"))
  .show(10))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### El plan de ejecucion
+# MAGIC `explain()` muestra el plan fisico que Spark ha elegido. Busca `Filter`, `HashAggregate` y `Exchange`
+# MAGIC (un `Exchange` es un *shuffle*: datos que viajan entre maquinas). En Free Edition no hay Spark UI; usa tambien el **perfil de consulta**.
+
+# COMMAND ----------
+
+(eventos.filter(F.col("team") == "Sporting Gijón")
+ .groupBy("type").count()
+ .explain())
 
 # COMMAND ----------
 
@@ -218,8 +249,108 @@ resumen_equipos.write.mode("overwrite").format("delta").saveAsTable("resumen_tir
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ## 10. Errores tipicos de los jobs de Spark
+# MAGIC Con 129.000 filas nada de esto falla, y justo por eso conviene verlo: **el codigo es el mismo con cientos de millones de filas**.
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### 10.1 `collect()` trae todo al driver
+# MAGIC `collect()` y `toPandas()` mueven *todos* los datos a una sola maquina. Aqui cabe; con datos grandes el driver se queda sin memoria.
+# MAGIC Pregunta: quieres ver 20 filas, que usas? Respuesta: `limit(20).show()`.
+
+# COMMAND ----------
+
+# PELIGROSO con datos grandes (aqui son 129.000 filas, asi que funciona):
+filas = eventos.collect()
+print("Filas traidas al driver:", len(filas))
+del filas
+
+# SEGURO: calcula en el cluster y trae solo el resultado
+eventos.limit(20).show(5)
+resumen = eventos.groupBy("team").count().collect()   # 20 filas: esto si es razonable
+print("Equipos:", len(resumen))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### 10.2 Variables que no se comparten
+# MAGIC Una variable de Python modificada dentro de una funcion distribuida no se actualiza en el driver.
+# MAGIC En `foreach` cada executor trabaja con su copia. Para sumar, **agrega**.
+# MAGIC (En serverless `foreach` puede no estar disponible; si da error, ese es el aviso de la diapositiva.)
+
+# COMMAND ----------
+
+# Forma correcta: que sume el cluster
+xg_total = tiros.agg(F.sum("shot_xg")).first()[0]
+print("xG total (suma en el cluster):", round(xg_total, 1))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### 10.3 Desbalanceo (skew): una clave domina
+# MAGIC El Sporting aparece en los 38 partidos y el resto de equipos en uno o dos. Mira como se reparten los eventos por equipo:
+
+# COMMAND ----------
+
+por_equipo = eventos.groupBy("team").count().orderBy(F.desc("count"))
+por_equipo.show(5)
+
+total = eventos.count()
+maximo = por_equipo.first()["count"]
+print(f"El equipo con mas eventos concentra el {maximo/total*100:.1f} % del total")
+# Un groupBy("team") envia todas las filas de cada equipo a una misma particion: la del Sporting es mucho mayor.
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### 10.4 Particiones: ni pocas ni demasiadas
+# MAGIC El numero de particiones decide cuantas tareas hay. Con pocos datos y 200 particiones de shuffle, casi todas quedan vacias
+# MAGIC (AQE las une automaticamente). En serverless `spark.sql.shuffle.partitions` esta en modo automatico.
+
+# COMMAND ----------
+
+# Muestra el valor configurado (puede ser "auto" en Databricks)
+print("shuffle.partitions =", spark.conf.get("spark.sql.shuffle.partitions"))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### 10.5 Trampas en el codigo
+# MAGIC - **UDF de Python** frente a funciones nativas: usa `F.round`, `F.when`... siempre que puedas.
+# MAGIC - **Ventanas sin `partitionBy`**: la ventana abarca todo el conjunto (compara con la seccion 7, que si lleva `partitionBy("team")`).
+# MAGIC - **Broadcast de tablas grandes**: solo difunde las pequenas (umbral por defecto: 10 MB).
+
+# COMMAND ----------
+
+# Ejemplo de funcion nativa en lugar de UDF: redondear xG a 2 decimales
+tiros.select("player", F.round("shot_xg", 2).alias("xg_2dec")).show(5)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### 10.6 Recalcular sin cache y ficheros pequenos
+# MAGIC Cada accion vuelve a leer y procesar el CSV desde el principio. Por eso en la seccion 9 usamos `tiros.cache()`.
+# MAGIC Con `df.cache()` basta: `CACHE TABLE`, `cacheTable()` y `checkpoint()` no funcionan en serverless.
+# MAGIC
+# MAGIC Y cuidado con **muchos ficheros pequenos**: cada captura del notebook 02b crea un fichero nuevo; miles de ficheros pequenos hacen lenta la lectura.
+
+# COMMAND ----------
+
+import time
+def tiempo(f):
+    t = time.time(); f(); return round(time.time() - t, 2)
+
+consulta = lambda: eventos.filter(F.col("type") == "Shot").groupBy("team").count().collect()
+print("Sin cache:", tiempo(consulta), "s")
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC ## Ejercicio propuesto
 # MAGIC 1. Calcula el porcentaje de pases completos **solo del Sporting** en cada partido y ordena los partidos de mejor a peor.
 # MAGIC 2. Cuantos goles marco el Sporting en la segunda parte (`period = 2`) frente a la primera?
 # MAGIC 3. Compara el tiempo de una agregacion con y sin `.cache()`.
 # MAGIC 4. Reflexiona: que ventajas tendria Spark si tuvieras los eventos de todas las competiciones del repositorio?
+# MAGIC
+# MAGIC **Extra:** busca en el perfil de consulta el paso mas lento de la seccion 5 y di si hay desbalanceo o spill.
