@@ -348,8 +348,12 @@ display(spark.sql(f"DESCRIBE HISTORY {CATALOGO}.{ESQUEMA}.resumen_ediciones_por_
 # MAGIC %md
 # MAGIC ### 10.3 Liberar la caché (cuando ya no la usas)
 # MAGIC `unpersist()` libera la memoria, pero **en serverless un DataFrame liberado ya no se puede usar, ni los derivados de él**
-# MAGIC (`resumen` salió de `ediciones`). Si lo haces antes de tiempo falla con `CACHE_DATAFRAME_ACCESS_AFTER_UNCACHE`.
-# MAGIC Aquí la mantenemos porque la usamos otra vez en la sección 12.6; allí la liberamos.
+# MAGIC (`resumen` salió de `ediciones`). Si lo haces antes de tiempo, o repites una celda que lo usa después de liberarlo, falla con
+# MAGIC `CACHE_DATAFRAME_ACCESS_AFTER_UNCACHE`. Si te pasa, vuelve a ejecutar la celda donde se crea el DataFrame cacheado.
+
+# COMMAND ----------
+
+ediciones.unpersist()   # ya hemos terminado con ediciones y resumen
 
 # COMMAND ----------
 
@@ -668,7 +672,7 @@ cambios.select("title", F.lower("title").alias("titulo_min")).show(5, truncate=F
 # MAGIC %md
 # MAGIC ### 12.6 Recalcular sin cache
 # MAGIC Cada acción vuelve a leer y procesar los ficheros desde el principio. Compara el tiempo de la misma consulta
-# MAGIC sobre el DataFrame sin cache y sobre el cacheado de la sección 10.
+# MAGIC sin cache y con cache (la celda crea su propio DataFrame cacheado).
 
 # COMMAND ----------
 
@@ -677,10 +681,13 @@ def tiempo(f):
     t = time.time(); f(); return round(time.time() - t, 2)
 
 sin_cache = lambda: cambios.filter(F.col("type") == "edit").groupBy("wiki").count().collect()
-con_cache = lambda: ediciones.groupBy("wiki").count().collect()
+# Creamos aquí su propio DataFrame cacheado, así la celda se puede repetir sin depender de la sección 10
+con = cambios.filter(F.col("type") == "edit").cache()
+con.count()   # materializa la cache
+con_cache = lambda: con.groupBy("wiki").count().collect()
 print("Sin cache:", tiempo(sin_cache), "s")
 print("Con cache:", tiempo(con_cache), "s")
-ediciones.unpersist()   # ya no la necesitamos: liberamos la memoria
+con.unpersist()   # al terminar, liberamos la memoria
 
 # COMMAND ----------
 
