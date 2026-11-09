@@ -303,7 +303,7 @@ assert "resumen_ediciones_por_wiki" in tablas, "La tabla no se ha creado: revisa
 # COMMAND ----------
 
 print("Nivel de almacenamiento:", ediciones.storageLevel)   # memoria y disco
-ediciones.unpersist()                                       # libera la memoria
+# La liberamos al final de la sección, cuando ya no la necesitamos (ver 10.3)
 
 # COMMAND ----------
 
@@ -342,6 +342,18 @@ except Exception as e:
 
 # Delta: cada escritura crea una versión de la tabla
 display(spark.sql(f"DESCRIBE HISTORY {CATALOGO}.{ESQUEMA}.resumen_ediciones_por_wiki"))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### 10.3 Liberar la caché (al final)
+# MAGIC `unpersist()` libera la memoria, pero **en serverless un DataFrame cacheado que se libera ya no se puede usar, ni los derivados de él**
+# MAGIC (`resumen` salió de `ediciones`). Si lo haces antes de tiempo falla con `CACHE_DATAFRAME_ACCESS_AFTER_UNCACHE`. Libera la caché cuando
+# MAGIC hayas terminado con ese DataFrame y los que dependen de él.
+
+# COMMAND ----------
+
+ediciones.unpersist()
 
 # COMMAND ----------
 
