@@ -4,3 +4,7 @@ __pycache__/
 
 # Soluciones: solo para el docente. Quita esta línea cuando quieras publicarlas.
 docente/
+
+# Herramientas locales: solo se versiona el script de instalacion
+herramientas/*
+!herramientas/instalar_spark.sh
