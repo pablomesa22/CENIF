@@ -41,7 +41,7 @@ print("Carpeta de trabajo:", BASE)
 # MAGIC ## 2. ¿Llega el flujo de Wikimedia a nuestro espacio de trabajo?
 # MAGIC
 # MAGIC Wikimedia publica los cambios de todos sus proyectos como un flujo continuo (formato *Server-Sent Events*, sobre HTTP).
-# MAGIC No hace falta cuenta ni clave. Si esta celda da `200`, el dominio está permitido desde tu espacio de trabajo.
+# MAGIC No hace falta cuenta ni clave. Si esta celda da `200`, el dominio está permitido desde tu espacio de trabajo. Si da error (Free Edition limita internet a una lista de dominios), el notebook **sigue con datos de ejemplo generados aquí**, sintéticos y con el mismo formato; el resto funciona igual.
 
 # COMMAND ----------
 
@@ -50,9 +50,17 @@ import requests
 URL = "https://stream.wikimedia.org/v2/stream/recentchange"
 CABECERAS = {"User-Agent": "CursoBigData/1.0 (formacion; contacto: tu-correo)"}   # pon tu correo
 
-r = requests.get(URL, headers=CABECERAS, stream=True, timeout=15)
-print(r.status_code, r.headers.get("content-type"))
-r.close()
+try:
+    r = requests.get(URL, headers=CABECERAS, stream=True, timeout=15)
+    print(r.status_code, r.headers.get("content-type"))
+    HAY_WIKIMEDIA = (r.status_code == 200)
+    r.close()
+except Exception as ex:
+    HAY_WIKIMEDIA = False
+    print("Sin acceso a Wikimedia desde este espacio de trabajo:", str(ex)[:200])
+
+print("Usaremos datos REALES de Wikimedia." if HAY_WIKIMEDIA else
+      "Usaremos datos de EJEMPLO generados aquí (sintéticos, con el mismo formato).")
 
 # COMMAND ----------
 
@@ -64,20 +72,40 @@ r.close()
 
 # COMMAND ----------
 
-import json, time, os
+import json, time, os, random
 
-def capturar(segundos=20, max_eventos=5000):
-    """Lee el flujo de Wikimedia y guarda un fichero JSON (una línea por evento)."""
-    destino = f"{BASE}/wiki_eventos"
+def flujo(segundos):
+    """Eventos (una línea JSON cada uno) durante unos segundos.
+    Reales si hay conexión con Wikimedia; si no, de ejemplo generados aquí."""
+    inicio = time.time()
+    if HAY_WIKIMEDIA:
+        with requests.get(URL, headers=CABECERAS, stream=True, timeout=(10, 30)) as r:
+            for linea in r.iter_lines():
+                if linea.startswith(b"data:"):
+                    yield linea[5:].decode("utf-8").strip()
+                if time.time() - inicio > segundos:
+                    break
+    else:
+        wikis = ["enwiki"]*50 + ["commonswiki"]*20 + ["wikidatawiki"]*30 + ["eswiki"]*8 + ["frwiki"]*6 + ["dewiki"]*5
+        tipos = ["edit"]*70 + ["log"]*15 + ["new"]*5 + ["categorize"]*10
+        while time.time() - inicio < segundos:
+            yield json.dumps({"wiki": random.choice(wikis), "type": random.choice(tipos),
+                              "title": f"Pagina {random.randint(1, 500)}", "user": f"usuario{random.randint(1, 80)}",
+                              "bot": random.random() < 0.3, "server_name": "ejemplo.org",
+                              "timestamp": int(time.time())})
+            time.sleep(0.05)   # unos 20 eventos por segundo
+
+def capturar(segundos=20, max_eventos=5000, carpeta="wiki_eventos"):
+    """Guarda un fichero JSON (una línea por evento) en el volumen."""
+    destino = f"{BASE}/{carpeta}"
     os.makedirs(destino, exist_ok=True)
     ruta = f"{destino}/captura_{int(time.time())}.json"
-    n, inicio = 0, time.time()
-    with requests.get(URL, headers=CABECERAS, stream=True, timeout=(10, 30)) as r, open(ruta, "w") as f:
-        for linea in r.iter_lines():
-            if linea.startswith(b"data:"):
-                f.write(linea[5:].decode("utf-8").strip() + "\n")
-                n += 1
-            if n >= max_eventos or time.time() - inicio > segundos:
+    n = 0
+    with open(ruta, "w") as f:
+        for linea in flujo(segundos):
+            f.write(linea + "\n")
+            n += 1
+            if n >= max_eventos:
                 break
     print(f"{n} eventos guardados en {ruta}")
 
@@ -715,18 +743,13 @@ print("Tamaño medio (bytes):", round(sum(f.size for f in ficheros) / max(len(fi
 
 # 13.1 Cada evento, línea a línea, durante 30 segundos
 inicio, n = time.time(), 0
-with requests.get(URL, headers=CABECERAS, stream=True, timeout=(10, 30)) as r:
-    for linea in r.iter_lines():
-        if not linea.startswith(b"data:"):
-            continue
-        try:
-            e = json.loads(linea[5:].decode("utf-8"))
-        except ValueError:
-            continue
-        n += 1
-        print(f"{time.strftime('%H:%M:%S')}  {e.get('wiki','?'):<12} {e.get('type','?'):<10} {str(e.get('user','?'))[:18]:<18} {str(e.get('title',''))[:50]}", flush=True)
-        if time.time() - inicio > 30:
-            break
+for linea in flujo(30):
+    try:
+        e = json.loads(linea)
+    except ValueError:
+        continue
+    n += 1
+    print(f"{time.strftime('%H:%M:%S')}  {e.get('wiki','?'):<12} {e.get('type','?'):<10} {str(e.get('user','?'))[:18]:<18} {str(e.get('title',''))[:50]}", flush=True)
 print(f"--- {n} eventos en 30 s ---")
 
 # COMMAND ----------
@@ -736,14 +759,7 @@ from IPython.display import clear_output
 carpeta = f"{BASE}/wiki_vivo"
 os.makedirs(carpeta, exist_ok=True)
 for ronda in range(1, 7):
-    ruta = f"{carpeta}/captura_{int(time.time())}.json"
-    inicio = time.time()
-    with requests.get(URL, headers=CABECERAS, stream=True, timeout=(10, 30)) as r, open(ruta, "w") as f:
-        for linea in r.iter_lines():
-            if linea.startswith(b"data:"):
-                f.write(linea[5:].decode("utf-8").strip() + "\n")
-            if time.time() - inicio > 10:
-                break
+    capturar(segundos=10, carpeta="wiki_vivo")
     vivo = spark.read.schema(esquema_wiki).json(carpeta)
     clear_output(wait=True)
     print(f"Ronda {ronda}/6 · {time.strftime('%H:%M:%S')} · eventos acumulados: {vivo.count()}")
