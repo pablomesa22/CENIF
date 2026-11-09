@@ -773,7 +773,7 @@ for ronda in range(1, 7):
 # COMMAND ----------
 
 import shutil
-for t in ("wiki_cambios", "wiki_ediciones_humanas", "wiki_por_tipo", "wiki_por_minuto", "resumen_ediciones_por_wiki"):
+for t in ("wiki_cambios", "wiki_ediciones_humanas", "wiki_por_tipo", "wiki_por_minuto", "wiki_tipo_minuto", "resumen_ediciones_por_wiki"):
     spark.sql(f"DROP TABLE IF EXISTS {CATALOGO}.{ESQUEMA}.{t}")
-for c in ("ck_copia", "ck_humanas", "ck_por_tipo", "ck_por_minuto", "wiki_eventos", "salida_parquet", "salida_un_fichero", "salida_por_wiki", "salida_avro", "wiki_vivo"):
+for c in ("ck_copia", "ck_humanas", "ck_por_tipo", "ck_por_minuto", "ck_tipo_minuto", "wiki_eventos", "salida_parquet", "salida_un_fichero", "salida_por_wiki", "salida_avro", "wiki_vivo"):
     shutil.rmtree(f"{BASE}/{c}", ignore_errors=True)
