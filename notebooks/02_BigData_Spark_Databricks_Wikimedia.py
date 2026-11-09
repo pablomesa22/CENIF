@@ -289,6 +289,13 @@ display(spark.table(f"{CATALOGO}.{ESQUEMA}.resumen_ediciones_por_wiki").orderBy(
 
 # COMMAND ----------
 
+# Comprobación: la tabla debe aparecer en el catálogo (Catalog > workspace > default > Tables, o SQL Editor)
+tablas = [t.tableName for t in spark.sql(f"SHOW TABLES IN {CATALOGO}.{ESQUEMA}").collect()]
+print("Tablas en", f"{CATALOGO}.{ESQUEMA}:", tablas)
+assert "resumen_ediciones_por_wiki" in tablas, "La tabla no se ha creado: revisa CATALOGO y ESQUEMA en la sección 1"
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC ### 10.1 La caché tiene un coste
 # MAGIC `cache()` ocupa memoria que luego falta para ejecutar. Mira dónde la guarda Spark y libérala cuando ya no la uses.
@@ -557,6 +564,14 @@ display(spark.table(f"{CATALOGO}.{ESQUEMA}.wiki_por_minuto")
 # MAGIC Prueba: ejecuta otra **captura** y relanza **solo una** de las consultas. Las demás tablas no cambian hasta que las relances.
 # MAGIC
 # MAGIC **Conclusión:** una misma fuente puede alimentar muchas consultas independientes; el checkpoint es lo que las separa.
+
+# COMMAND ----------
+
+# Comprobación: las consultas de streaming escriben tablas Delta en el catálogo
+tablas = [t.tableName for t in spark.sql(f"SHOW TABLES IN {CATALOGO}.{ESQUEMA}").collect()]
+esperadas = ["wiki_cambios", "wiki_ediciones_humanas", "wiki_por_tipo", "wiki_por_minuto"]
+print("Faltan:", [t for t in esperadas if t not in tablas] or "ninguna")
+# Desde el SQL Editor se consultan con el nombre completo: SELECT * FROM workspace.default.wiki_cambios
 
 # COMMAND ----------
 
