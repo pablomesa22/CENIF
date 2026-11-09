@@ -346,14 +346,10 @@ display(spark.sql(f"DESCRIBE HISTORY {CATALOGO}.{ESQUEMA}.resumen_ediciones_por_
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ### 10.3 Liberar la caché (al final)
-# MAGIC `unpersist()` libera la memoria, pero **en serverless un DataFrame cacheado que se libera ya no se puede usar, ni los derivados de él**
-# MAGIC (`resumen` salió de `ediciones`). Si lo haces antes de tiempo falla con `CACHE_DATAFRAME_ACCESS_AFTER_UNCACHE`. Libera la caché cuando
-# MAGIC hayas terminado con ese DataFrame y los que dependen de él.
-
-# COMMAND ----------
-
-ediciones.unpersist()
+# MAGIC ### 10.3 Liberar la caché (cuando ya no la usas)
+# MAGIC `unpersist()` libera la memoria, pero **en serverless un DataFrame liberado ya no se puede usar, ni los derivados de él**
+# MAGIC (`resumen` salió de `ediciones`). Si lo haces antes de tiempo falla con `CACHE_DATAFRAME_ACCESS_AFTER_UNCACHE`.
+# MAGIC Aquí la mantenemos porque la usamos otra vez en la sección 12.6; allí la liberamos.
 
 # COMMAND ----------
 
@@ -684,6 +680,7 @@ sin_cache = lambda: cambios.filter(F.col("type") == "edit").groupBy("wiki").coun
 con_cache = lambda: ediciones.groupBy("wiki").count().collect()
 print("Sin cache:", tiempo(sin_cache), "s")
 print("Con cache:", tiempo(con_cache), "s")
+ediciones.unpersist()   # ya no la necesitamos: liberamos la memoria
 
 # COMMAND ----------
 
