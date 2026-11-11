@@ -9,7 +9,7 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
 | Carpeta | Qué hay |
 |---|---|
 | `slides/` | Diapositivas del curso: PDF (`Big-Data-e-IA_Bloques-1-y-2.pdf`) y versión web (`diapositivas.html`, ábrela en el navegador). |
-| `notebooks/` | Cuadernos de práctica `01`, `03`–`05` (para Google Colab) el notebook de Databricks del Bloque 3 (`02_BigData_Spark_Databricks_Wikimedia`, en `.py` e `.ipynb`) y la demo de aprendizaje por refuerzo del bloque de IA (`06_IA_Aprendizaje_Refuerzo`, en versión Databricks y local). |
+| `notebooks/` | Cuadernos de práctica `01`, `03`–`05` (para Google Colab) el notebook de Databricks del Bloque 3 (`02_BigData_Spark_Databricks_Wikimedia`, en `.py` e `.ipynb`) la demo de aprendizaje por refuerzo del bloque de IA (`06_IA_Aprendizaje_Refuerzo`, en versión Databricks y local) y el servidor MCP de práctica (`07_IA_Servidor_MCP_Sporting.py`). |
 | `data/` | `sporting_partidos.csv` (38 partidos) y `sporting_eventos.csv` (≈129.000 eventos). |
 
 ## Cómo usar los cuadernos
@@ -22,6 +22,12 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
 5. `06_IA_Aprendizaje_Refuerzo` (bloque de IA) muestra cómo aprende una IA por prueba y error, como las de Trackmania: un coche recorre un circuito de texto sin ningún dataset previo, solo con premios y castigos (Q-learning). Hay dos versiones:
    - `06_IA_Aprendizaje_Refuerzo_Databricks.py`: **Workspace → Import** y **Run all**. Funciona en cualquier clúster sin instalar nada; al final guarda el historial de intentos como DataFrame de Spark.
    - `06_IA_Aprendizaje_Refuerzo_local.py`: `pip install numpy matplotlib` y `python 06_IA_Aprendizaje_Refuerzo_local.py`.
+
+6. `07_IA_Servidor_MCP_Sporting.py` (bloque de IA, agentes) es un servidor MCP (Model Context Protocol) que da a un agente acceso de solo lectura a `data/sporting_partidos.csv`. Ofrece tres herramientas (`resumen_temporada`, `buscar_partidos`, `partido`), un recurso (`sporting://partidos`) y un prompt (`cronica_partido`).
+   - Instalación: `pip install "mcp[cli]"` (SDK oficial de Python, versión 2).
+   - Prueba sin IA: `python notebooks/07_IA_Servidor_MCP_Sporting.py --probar` lista las herramientas y las llama.
+   - Inspector visual: `mcp dev notebooks/07_IA_Servidor_MCP_Sporting.py` (necesita Node.js).
+   - Con un asistente como Claude Desktop: añadir un servidor MCP con el comando `python` y la ruta completa del script.
 
 ## Datos y licencia
 
