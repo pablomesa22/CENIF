@@ -9,7 +9,7 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
 | Carpeta | Qué hay |
 |---|---|
 | `slides/` | Diapositivas del curso: PDF (`Big-Data-e-IA_Bloques-1-y-2.pdf`) y versión web (`diapositivas.html`, ábrela en el navegador). |
-| `notebooks/` | Cuadernos de práctica `01`, `03`–`05` (para Google Colab) y el notebook de Databricks del Bloque 3 (`02_BigData_Spark_Databricks_Wikimedia`, en `.py` e `.ipynb`). |
+| `notebooks/` | Cuadernos de práctica `01`, `03`–`05` (para Google Colab) el notebook de Databricks del Bloque 3 (`02_BigData_Spark_Databricks_Wikimedia`, en `.py` e `.ipynb`) y la demo de aprendizaje por refuerzo del bloque de IA (`06_IA_Aprendizaje_Refuerzo`, en versión Databricks y local). |
 | `data/` | `sporting_partidos.csv` (38 partidos) y `sporting_eventos.csv` (≈129.000 eventos). |
 
 ## Cómo usar los cuadernos
@@ -18,6 +18,10 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
 2. **Archivo → Subir cuaderno** y elige un fichero de `notebooks/` (o **Archivo → Abrir cuaderno → GitHub** si el repositorio está publicado).
 3. Ejecuta las celdas en orden. El cuaderno 01 descarga los datos de StatsBomb y genera los CSV; si prefieres no esperar, sube los de `data/` al panel de ficheros de Colab (icono de carpeta).
 4. `02_BigData_Spark_Databricks_Wikimedia` (Bloque 3) es para Databricks Free Edition: **Workspace → Import** y elige el `.py` (o el `.ipynb`). No hay que subir ficheros: el propio notebook captura unos minutos del flujo de Wikimedia EventStreams y los guarda en un volumen. Cubre carga, filtros, agregaciones, joins, ventanas, SQL, cache, Structured Streaming (copia, filtro, conteo y ventanas) y errores típicos de Spark. Requiere acceso saliente a `stream.wikimedia.org` desde tu espacio de trabajo; en Free Edition los flujos solo funcionan con `trigger(availableNow=True)`.
+
+5. `06_IA_Aprendizaje_Refuerzo` (bloque de IA) muestra cómo aprende una IA por prueba y error, como las de Trackmania: un coche recorre un circuito de texto sin ningún dataset previo, solo con premios y castigos (Q-learning). Hay dos versiones:
+   - `06_IA_Aprendizaje_Refuerzo_Databricks.py`: **Workspace → Import** y **Run all**. Funciona en cualquier clúster sin instalar nada; al final guarda el historial de intentos como DataFrame de Spark.
+   - `06_IA_Aprendizaje_Refuerzo_local.py`: `pip install numpy matplotlib` y `python 06_IA_Aprendizaje_Refuerzo_local.py`.
 
 ## Datos y licencia
 
