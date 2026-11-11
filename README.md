@@ -1,6 +1,6 @@
 # Curso Big Data e IA · CENIF
 
-Material del curso de 20 horas (BOE-A-2021-7686). Este repositorio recoge los **Bloques 1 a 3**: fundamentos de Big Data, tratamiento de datos con Python y Spark en Databricks.
+Material del curso de 20 horas (BOE-A-2021-7686). Este repositorio recoge los **Bloques 1 a 3** (fundamentos de Big Data, tratamiento de datos con Python y Spark en Databricks) y el **bloque de IA** (slides y prácticas de aprendizaje por refuerzo y MCP).
 
 Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos abiertos de StatsBomb) en los bloques 1 y 2, y **cambios de Wikipedia en tiempo real** (Wikimedia EventStreams) en el bloque 3.
 
@@ -8,7 +8,7 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
 
 | Carpeta | Qué hay |
 |---|---|
-| `slides/` | Diapositivas del curso: PDF (`Big-Data-e-IA_Bloques-1-y-2.pdf`) y versión web (`diapositivas.html`, ábrela en el navegador). |
+| `slides/` | Diapositivas del curso: PDF (`Big-Data-e-IA_Bloques-1-y-2.pdf`) y versión web (`diapositivas.html`, ábrela en el navegador). Bloque de IA: `Bloque-IA_Update.pdf` (129 slides) y `Bloque-IA_Update.html` (versión web, funciona sin conexión). |
 | `notebooks/` | Cuadernos de práctica `01`, `03`–`05` (para Google Colab) el notebook de Databricks del Bloque 3 (`02_BigData_Spark_Databricks_Wikimedia`, en `.py` e `.ipynb`) la demo de aprendizaje por refuerzo del bloque de IA (`06_IA_Aprendizaje_Refuerzo`, en versión Databricks y local) y el servidor MCP de práctica (`07_IA_Servidor_MCP_Sporting.py`). |
 | `data/` | `sporting_partidos.csv` (38 partidos) y `sporting_eventos.csv` (≈129.000 eventos). |
 
