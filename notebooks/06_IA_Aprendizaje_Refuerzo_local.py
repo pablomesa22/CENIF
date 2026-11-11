@@ -154,7 +154,7 @@ dibujar(camino, f"Tras el entrenamiento: {len(camino) - 1} pasos, {choques} choq
 dibujar_politica(q)
 
 # --- Curva de aprendizaje -------------------------------------------------------
-ventana = 20
+ventana = min(20, EPISODIOS)
 media = np.convolve(historial_pasos, np.ones(ventana) / ventana, mode="valid")
 
 fig, ax = plt.subplots(figsize=(10, 4.5))

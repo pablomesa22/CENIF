@@ -29,13 +29,13 @@ CIRCUITO = [
     "############",
 ]
 
-EPISODIOS = 500           # cuántas vueltas de entrenamiento (prueba con 50)
+EPISODIOS = 500           # cuántas vueltas de entrenamiento (prueba con 20)
 MAX_PASOS = 300           # si no llega en estos pasos, se corta el intento
 ALFA = 0.5                # velocidad de aprendizaje: cuánto pesa cada experiencia nueva
 GAMMA = 0.95              # cuánto le importan las recompensas futuras
 EXPLORACION_MINIMA = 0.05 # probabilidad mínima de probar un movimiento al azar
-RECOMPENSA_PASO = -1      # prueba con 0: deja de buscar la ruta más corta
-RECOMPENSA_CHOQUE = -5
+RECOMPENSA_PASO = -1
+RECOMPENSA_CHOQUE = -5    # prueba con 0: aprende a chocar sin parar
 RECOMPENSA_META = 100
 SEMILLA = 42              # mismo resultado en cada ejecución; cámbiala para otro entrenamiento
 EPISODIOS_A_MOSTRAR = [1, 25, 100]
@@ -187,7 +187,7 @@ for f in range(FILAS):
 # COMMAND ----------
 
 pasos = [h["pasos"] for h in historial]
-ventana = 20
+ventana = min(20, EPISODIOS)
 media = np.convolve(pasos, np.ones(ventana) / ventana, mode="valid")
 
 fig, ax = plt.subplots(figsize=(10, 4.5))
@@ -218,5 +218,5 @@ display(df_historial)
 # MAGIC %md
 # MAGIC ### Preguntas para el grupo
 # MAGIC - ¿Cuántos intentos ha necesitado hasta llegar a la meta por primera vez?
-# MAGIC - ¿Qué pasa con `EPISODIOS = 50`? ¿Y con `RECOMPENSA_PASO = 0`?
+# MAGIC - ¿Qué pasa con `EPISODIOS = 20`? ¿Y con `RECOMPENSA_CHOQUE = 0`?
 # MAGIC - ¿Se parece esto a cómo aprende una persona a conducir? ¿En qué no se parece?
