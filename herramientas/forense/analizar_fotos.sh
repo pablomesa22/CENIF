@@ -37,9 +37,22 @@ fi
 
 # 3. Entorno de Python 3.11 con las librerías del análisis por lotes
 cd "$SHERLOQ"
+PYTHON_PEDIDO="3.11"
+ARQ_ESPERADA=""
+if [ "$(uname)" = "Darwin" ] && [ "$(sysctl -n hw.optional.arm64 2>/dev/null)" = "1" ]; then
+  # Mac con Apple Silicon: Python nativo arm64. Un Python x86_64 iría por Rosetta,
+  # mucho más lento, y TensorFlow puede no llegar a arrancar.
+  PYTHON_PEDIDO="cpython-3.11-macos-aarch64-none"
+  ARQ_ESPERADA="arm64"
+fi
+if [ -x .venv/bin/python ] && [ -n "$ARQ_ESPERADA" ] && \
+   [ "$(.venv/bin/python -c 'import platform; print(platform.machine())')" != "$ARQ_ESPERADA" ]; then
+  info "El entorno usa un Python de Intel en un Mac con Apple Silicon: se vuelve a crear"
+  rm -rf .venv
+fi
 if [ ! -x .venv/bin/python ]; then
   info "Creando el entorno de Python 3.11"
-  uv venv --python 3.11 .venv
+  uv venv --python "$PYTHON_PEDIDO" .venv
 fi
 if [ ! -f .venv/.lote_ok ]; then
   info "Instalando las librerías del análisis (unos 300 MB)"
@@ -58,8 +71,8 @@ if [ "${1:-}" = "--gui" ]; then
     uv pip install --python .venv/bin/python -r gui/requirements.txt
     touch .venv/.gui_ok
   fi
-  info "Abriendo Sherloq"
-  exec .venv/bin/python -m gui.sherloq_app
+  info "Abriendo Sherloq (la ventana puede tardar un poco; mira también el Dock)"
+  PYTHONPATH="$SHERLOQ" exec .venv/bin/python "$AQUI/sherloq_gui.py"
 fi
 
 # 4. Análisis por lotes
