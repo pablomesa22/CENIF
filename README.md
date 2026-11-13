@@ -31,7 +31,9 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
    - Inspector visual: `mcp dev notebooks/07_IA_Servidor_MCP_Sporting.py` (necesita Node.js).
    - Con un asistente como Claude Desktop: añadir un servidor MCP con el comando `python` y la ruta completa del script.
 
-7. Los cuadernos de `notebooks/proposals/` son complementarios: los `.ipynb` se abren en Colab como el 01 (necesitan los CSV de `data/`) y los `.py` se importan en Databricks como el 02.
+7. Análisis forense de imágenes (Sesión 2, Stable Diffusion): `herramientas/forense/analizar_fotos.sh CARPETA_FOTOS` descarga [Sherloq](https://github.com/GuidoBartoli/sherloq), le pasa cada foto de la carpeta y abre un informe con todas las salidas. Funciona en local (macOS o Linux); los detalles están en `herramientas/forense/README.md`.
+
+8. Los cuadernos de `notebooks/proposals/` son complementarios: los `.ipynb` se abren en Colab como el 01 (necesitan los CSV de `data/`) y los `.py` se importan en Databricks como el 02.
 
 ## Datos y licencia
 

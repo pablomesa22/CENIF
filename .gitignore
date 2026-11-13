@@ -8,3 +8,5 @@ docente/
 # Herramientas locales: solo se versiona el script de instalacion
 herramientas/*
 !herramientas/instalar_spark.sh
+!herramientas/forense/
+herramientas/forense/sherloq/
