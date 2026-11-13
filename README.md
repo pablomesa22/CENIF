@@ -10,7 +10,7 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
 |---|---|
 | `slides/` | Diapositivas trabajadas en clase, cada una en PDF y en versión web (`.html`, se abre en el navegador y funciona sin conexión): `Big-Data-e-IA_Bloques-1-y-2` (bloques 1 y 2), `Bloque-3_Spark-Databricks` (99 slides), `Bloque-IA_Update` (129 slides) e `Ingenieria-informatica-era-IA` (37 slides, retos de la profesión con IA). |
 | `slides/proposals/` | Material complementario que no se ha trabajado en clase: `Bloque-4_Visualizacion-BI`, `Bloque-5_Fundamentos-IA`, `Bloque-6_Machine-Learning`, `Bloque-7_Proyecto-integrador` y `Big-Data_Fundamentos-borrador` (versión inicial, incompleta, de los bloques 1 y 2). |
-| `notebooks/` | Prácticas trabajadas: `01` (Google Colab), el notebook de Databricks del Bloque 3 (`02_BigData_Spark_Databricks_Wikimedia`, en `.py` e `.ipynb`), la demo de aprendizaje por refuerzo (`06_IA_Aprendizaje_Refuerzo`, versión Databricks y local) y el servidor MCP de práctica (`07_IA_Servidor_MCP_Sporting.py`). |
+| `notebooks/` | Prácticas trabajadas: `01` (Google Colab), el notebook de Databricks del Bloque 3 (`02_BigData_Spark_Databricks_Wikimedia`, en `.py` e `.ipynb`), la demo de aprendizaje por refuerzo (`06_IA_Aprendizaje_Refuerzo`, versión Databricks y local) el servidor MCP de práctica (`07_IA_Servidor_MCP_Sporting.py`) y el proyecto supervisado en ocho pasos (`08_IA_Supervisado_8_pasos.ipynb`). |
 | `notebooks/proposals/` | Prácticas complementarias de los bloques no trabajados: `02_BigData_Databricks_Spark_Sporting.py` y `02b_BigData_Streaming_Databricks` (versión anterior del Bloque 3 con datos del Sporting y streaming), `03_BigData_Visualizacion_BI_Sporting.ipynb` y `03b_BI_en_Databricks.py` (Bloque 4), `04_IA_MachineLearning_Sporting.ipynb` (Bloques 5 y 6) y `05_Proyecto_Integrador_Sporting.ipynb` (Bloque 7). |
 | `data/` | `sporting_partidos.csv` (38 partidos) y `sporting_eventos.csv` (≈129.000 eventos). |
 
@@ -31,9 +31,11 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
    - Inspector visual: `mcp dev notebooks/07_IA_Servidor_MCP_Sporting.py` (necesita Node.js).
    - Con un asistente como Claude Desktop: añadir un servidor MCP con el comando `python` y la ruta completa del script.
 
-7. Análisis forense de imágenes (Sesión 2, Stable Diffusion): `herramientas/forense/analizar_fotos.sh CARPETA_FOTOS` descarga [Sherloq](https://github.com/GuidoBartoli/sherloq), le pasa cada foto de la carpeta y abre un informe con todas las salidas. Funciona en local (macOS o Linux); los detalles están en `herramientas/forense/README.md`.
+7. `08_IA_Supervisado_8_pasos.ipynb` (Sesión 2 de IA) recorre los ocho pasos de un proyecto supervisado con datos reales: el valor de la vivienda en California (censo de 1990, incluido en scikit-learn). Se abre en Colab y no hay que subir nada.
 
-8. Los cuadernos de `notebooks/proposals/` son complementarios: los `.ipynb` se abren en Colab como el 01 (necesitan los CSV de `data/`) y los `.py` se importan en Databricks como el 02.
+8. Análisis forense de imágenes (Sesión 2, Stable Diffusion): `herramientas/forense/analizar_fotos.sh CARPETA_FOTOS` descarga [Sherloq](https://github.com/GuidoBartoli/sherloq), le pasa cada foto de la carpeta y abre un informe con todas las salidas. Funciona en local (macOS o Linux); los detalles están en `herramientas/forense/README.md`.
+
+9. Los cuadernos de `notebooks/proposals/` son complementarios: los `.ipynb` se abren en Colab como el 01 (necesitan los CSV de `data/`) y los `.py` se importan en Databricks como el 02.
 
 ## Datos y licencia
 
