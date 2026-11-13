@@ -35,6 +35,9 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
 
 8. `09_IA_Red_Neuronal_Juguete.py` (Sesión 2 de IA) genera las figuras de las slides de redes neuronales: una neurona que aprende a separar aprobados y suspensos y una red con capa oculta frente a un círculo. `pip install scikit-learn matplotlib` y `python 09_IA_Red_Neuronal_Juguete.py`.
 
+   - `10_IA_Refuerzo_Laberinto.py`: Q-learning en un laberinto, con los caminos por episodio, la curva de recompensa y la tabla Q dibujada.
+   - `11_IA_KMeans_Clientes.py`: k-means paso a paso con clientes y cómo se asignan clientes nuevos.
+
 9. Análisis forense de imágenes (Sesión 2, Stable Diffusion): `herramientas/forense/analizar_fotos.sh CARPETA_FOTOS` descarga [Sherloq](https://github.com/GuidoBartoli/sherloq), le pasa cada foto de la carpeta y abre un informe con todas las salidas. Funciona en local (macOS o Linux); los detalles están en `herramientas/forense/README.md`.
 
 10. Los cuadernos de `notebooks/proposals/` son complementarios: los `.ipynb` se abren en Colab como el 01 (necesitan los CSV de `data/`) y los `.py` se importan en Databricks como el 02.
