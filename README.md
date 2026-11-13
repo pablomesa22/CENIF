@@ -33,9 +33,11 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
 
 7. `08_IA_Supervisado_8_pasos.ipynb` (Sesión 2 de IA) recorre los ocho pasos de un proyecto supervisado con datos reales: el valor de la vivienda en California (censo de 1990, incluido en scikit-learn). Se abre en Colab y no hay que subir nada.
 
-8. Análisis forense de imágenes (Sesión 2, Stable Diffusion): `herramientas/forense/analizar_fotos.sh CARPETA_FOTOS` descarga [Sherloq](https://github.com/GuidoBartoli/sherloq), le pasa cada foto de la carpeta y abre un informe con todas las salidas. Funciona en local (macOS o Linux); los detalles están en `herramientas/forense/README.md`.
+8. `09_IA_Red_Neuronal_Juguete.py` (Sesión 2 de IA) genera las figuras de las slides de redes neuronales: una neurona que aprende a separar aprobados y suspensos y una red con capa oculta frente a un círculo. `pip install scikit-learn matplotlib` y `python 09_IA_Red_Neuronal_Juguete.py`.
 
-9. Los cuadernos de `notebooks/proposals/` son complementarios: los `.ipynb` se abren en Colab como el 01 (necesitan los CSV de `data/`) y los `.py` se importan en Databricks como el 02.
+9. Análisis forense de imágenes (Sesión 2, Stable Diffusion): `herramientas/forense/analizar_fotos.sh CARPETA_FOTOS` descarga [Sherloq](https://github.com/GuidoBartoli/sherloq), le pasa cada foto de la carpeta y abre un informe con todas las salidas. Funciona en local (macOS o Linux); los detalles están en `herramientas/forense/README.md`.
+
+10. Los cuadernos de `notebooks/proposals/` son complementarios: los `.ipynb` se abren en Colab como el 01 (necesitan los CSV de `data/`) y los `.py` se importan en Databricks como el 02.
 
 ## Datos y licencia
 
