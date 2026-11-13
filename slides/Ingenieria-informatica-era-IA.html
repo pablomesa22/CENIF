@@ -161,6 +161,16 @@ section.statement { padding: 128px 128px 160px; justify-content: center; gap: 36
 .teal .source { color: #CFEBE8; }
 .question { font-size: 32px; line-height: 1.4; color: #17706A; max-width: 1500px; }
 .dark .question { color: #CFEBE8; }
+
+/* Bloques de código */
+.code { font-family: 'JetBrains Mono', monospace; font-size: 22px; line-height: 1.45; background: #0B1823; color: #E6EEF2; border-radius: 14px; padding: 22px 26px; margin: 0; white-space: pre; font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+.dark .code { background: #08131C; }
+.code .c { color: #8FA6B5; }
+.code .k { color: #F2A541; }
+.code .bad { background: rgba(214, 90, 64, .35); }
+.code .ok { background: rgba(23, 112, 106, .55); }
+.code-label { font-size: 22px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #17706A; }
+.dark .code-label { color: #F2A541; }
 </style></head>
 <body>
 <section id="cover" class="dark statement">
@@ -168,7 +178,7 @@ section.statement { padding: 128px 128px 160px; justify-content: center; gap: 36
 <h1 class="hero">La ingeniería informática en la era de la IA</h1>
 <p class="lead-big">Qué dicen los estudios sobre los retos que siguen siendo nuestros.</p>
 <div class="pills"><p class="pill">Productividad</p><p class="pill">Empleo</p><p class="pill">Aprendizaje</p><p class="pill amber">Seguridad</p><p class="pill amber">Datos</p><p class="pill amber">Problemas nuevos</p><p class="pill amber">Agenda 2030</p></div>
-<p class="source">Fuentes: METR, GitHub, DORA, Stanford, WEF, Anthropic, CHI, ACM CCS, Veracode, Stack Overflow, PNAS Nexus, Nature, ICML, USENIX Security, ACM TOSEM · Referencias completas al final</p>
+<p class="source">Fuentes: METR, GitHub, DORA, Stanford, WEF, Gartner, Canva, Meta, Anthropic, CHI, ACM CCS, Veracode, Stack Overflow, PNAS Nexus, Nature, ICML, USENIX Security, ACM TOSEM · Referencias completas al final</p>
 <aside>Pregunta: ¿qué creéis que dicen los estudios sobre el futuro del ingeniero informático con la IA?
 Respuesta: dejad que el grupo opine antes de empezar. Lo habitual es oír dos extremos: «la IA nos va a sustituir» o «no cambia nada».
 Conclusión: este bloque contrasta esos titulares con estudios serios: ensayos controlados, encuestas grandes, datos de empleo y artículos académicos. En cada tema veremos los datos y, al final, el reto que plantean. Cuando una fuente es de una empresa con intereses, lo decimos.</aside>
@@ -312,14 +322,14 @@ Conclusión: el primer reto del ingeniero no es técnico sino de método: decidi
 <p class="num">02</p>
 <h1 class="hero">¿Quién entra en la profesión?</h1>
 <p class="lead-big">Los datos de empleo apuntan a los perfiles junior, aunque la demanda de desarrolladores sigue creciendo.</p>
-<p class="source">Tema 2 de 7 · Fuentes: Brynjolfsson et al., Stanford (2025-2026), WEF (2025) · Referencias completas al final</p>
+<p class="source">Tema 2 de 7 · Fuentes: Brynjolfsson et al., Stanford (2025-2026), WEF (2025), Gartner (2025), Entrepreneur (2025), Canva (2025), TechRadar y 404 Media (2025), Fortune sobre Anthropic (2025), Fortune sobre Shopify (2025) · Referencias completas al final</p>
 <aside>Pregunta: si fuerais responsables de un equipo, ¿contrataríais ahora más o menos perfiles junior?
 Respuesta: recoged opiniones. Es un debate abierto en muchas empresas.
-Conclusión: veremos dos fuentes que parecen contradecirse: un estudio de Stanford con datos de nóminas que muestra menos empleo para los más jóvenes en los trabajos expuestos a la IA, y el informe del Foro Económico Mundial que sitúa a los desarrolladores entre los empleos que más crecerán.</aside>
+Veremos también cómo están cambiando las entrevistas técnicas para quien empieza. Conclusión: veremos dos fuentes que parecen contradecirse: un estudio de Stanford con datos de nóminas que muestra menos empleo para los más jóvenes en los trabajos expuestos a la IA, y el informe del Foro Económico Mundial que sitúa a los desarrolladores entre los empleos que más crecerán.</aside>
 </section>
 
 <section id="canaries">
-<div class="head"><p class="eyebrow">Empleo · 1 de 4</p><h2 class="title">Stanford: menos empleo para los más jóvenes</h2></div>
+<div class="head"><p class="eyebrow">Empleo · 1 de 8</p><h2 class="title">Stanford: menos empleo para los más jóvenes</h2></div>
 <p class="lead">Datos de nóminas de millones de trabajadores, de finales de 2022 a mediados de 2026.</p>
 <div class="row">
 <div class="card cream"><p class="kicker">22 a 25 años · trabajos muy expuestos</p><p class="big accent">−11 %</p><p class="tx">de empleo; el desarrollo de software es uno de los ejemplos.</p></div>
@@ -335,7 +345,7 @@ Conclusión: la señal es que la entrada en la profesión se está estrechando, 
 </section>
 
 <section id="canaries-auto" class="dark">
-<div class="head"><p class="eyebrow">Empleo · 2 de 4</p><h2 class="title">Automatizar no es lo mismo que complementar</h2></div>
+<div class="head"><p class="eyebrow">Empleo · 2 de 8</p><h2 class="title">Automatizar no es lo mismo que complementar</h2></div>
 <div class="row">
 <div class="card warn"><p class="ct">Donde la IA automatiza tareas</p><p class="tx">Hace el trabajo en lugar de la persona. Ahí se concentra la caída del empleo joven.</p></div>
 <div class="card solid"><p class="ct">Donde la IA complementa</p><p class="tx">Ayuda a la persona a hacer más. Ahí no cae, y en mayores de 40 el empleo incluso sube.</p></div>
@@ -349,7 +359,7 @@ Conclusión: para las empresas, el reto es mantener una cantera; para quien empi
 </section>
 
 <section id="wef">
-<div class="head"><p class="eyebrow">Empleo · 3 de 4</p><h2 class="title">El contrapunto: los desarrolladores siguen creciendo</h2></div>
+<div class="head"><p class="eyebrow">Empleo · 3 de 8</p><h2 class="title">El contrapunto: los desarrolladores siguen creciendo</h2></div>
 <div class="row">
 <div class="col" style="flex:1.3">
 <p class="lead">Empleos que más crecerán hasta 2030, en porcentaje:</p>
@@ -368,7 +378,7 @@ Conclusión: para las empresas, el reto es mantener una cantera; para quien empi
 <div class="card"><p class="ct">La lectura conjunta</p><p class="tx">Crece la demanda, pero cambia lo que se pide. 7 de cada 10 empresas ya ven imprescindible el pensamiento analítico.</p></div>
 </div>
 </div>
-<p class="source">Fuente: Foro Económico Mundial (2025), «Future of Jobs Report 2025» · weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs y capítulo 3, «Skills outlook»: weforum.org/publications/the-future-of-jobs-report-2025/in-full/3-skills-outlook</p>
+<p class="source">Fuente: Foro Económico Mundial (2025), «Future of Jobs Report 2025» · weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs y weforum.org/publications/the-future-of-jobs-report-2025/in-full/3-skills-outlook</p>
 <aside>Pregunta: ¿cómo encaja esto con la caída del empleo joven que acabamos de ver?
 Respuesta: el informe del Foro Económico Mundial pregunta a más de 1.000 empresas, que suman más de 14 millones de trabajadores, qué empleos crecerán hasta 2030. Los desarrolladores de software y aplicaciones están en el cuarto puesto en crecimiento porcentual, detrás de los especialistas en big data, los ingenieros fintech y los especialistas en IA y aprendizaje automático. Al mismo tiempo, las empresas esperan que el 39 % de las competencias clave de los trabajadores cambie en ese periodo.
 Competencias: las que más crecen son tres técnicas (IA y big data; redes y ciberseguridad; alfabetización tecnológica) seguidas de varias humanas: pensamiento creativo; resiliencia, flexibilidad y agilidad; curiosidad y aprendizaje continuo. Completan el top 10 liderazgo e influencia social, gestión del talento, pensamiento analítico y cuidado del medio ambiente. El pensamiento analítico es además la competencia clave más valorada hoy: 7 de cada 10 empresas la consideran imprescindible. Para un desarrollador, lo técnico (IA, datos, seguridad) y lo humano (criterio, aprender continuamente) crecen a la vez.
@@ -376,15 +386,188 @@ Las dos fuentes miden cosas distintas: Stanford mide empleo real con nóminas ha
 Conclusión: la profesión no desaparece; se transforma, y la transformación pesa más sobre quien empieza. Fuentes: https://weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs y https://www.weforum.org/publications/the-future-of-jobs-report-2025/in-full/3-skills-outlook/</aside>
 </section>
 
+<section id="ent-trampa" class="dark">
+<div class="head"><p class="eyebrow">Empleo · 4 de 8</p><h2 class="title">La entrevista técnica clásica deja de funcionar</h2></div>
+<div class="row">
+<div class="card warn"><p class="ct">Interview Coder, 2025</p><p class="tx">Un estudiante de Columbia crea una herramienta que resuelve con IA los ejercicios de la entrevista sin que se vea en pantalla. Graba cómo supera la de Amazon, consigue ofertas y la universidad le suspende.</p></div>
+<div class="card solid"><p class="ct">Lo que demuestra</p><p class="tx">Un ejercicio de algoritmos por videollamada ya no mide si alguien sabe programar: la IA lo resuelve en segundos.</p></div>
+</div>
+<div class="row">
+<div class="card"><p class="big">4 de 10</p><p class="tx">candidatos usan IA al presentar su candidatura</p></div>
+<div class="card"><p class="big">6 %</p><p class="tx">admite fraude: hacerse pasar por otro o que otro se haga pasar por él</p></div>
+<div class="card"><p class="big">1 de 4</p><p class="tx">perfiles de candidato podría ser falso en 2028, según Gartner</p></div>
+</div>
+<p class="source">Fuentes: Gizmodo (27 de marzo de 2025), «He built a tool to get around Big Tech's recruiting process. Columbia kicked him out of school» · gizmodo.com/he-built-a-tool-to-get-around-big-techs-recruiting-process-columbia-kicked-him-out-of-school-2000581712 | Gartner (31 de julio de 2025), encuesta a 3.000 candidatos, resumida en HR Dive, «By 2028, 1 in 4 candidate profiles will be fake» · hrdive.com/news/fake-job-candidates-ai/757126</p>
+<aside>Pregunta: si la IA resuelve un ejercicio de LeetCode en segundos, ¿qué está midiendo una entrevista que consiste en resolver ese ejercicio por videollamada?
+Respuesta: cada vez menos. En 2025 un estudiante de informática de Columbia, Roy Lee, creó Interview Coder: una aplicación invisible en las videollamadas que captura el enunciado, se lo pasa a un modelo de IA y muestra la solución. Grabó cómo superaba con ella la entrevista técnica de Amazon, la vendió por suscripción (60 dólares al mes) y Columbia le suspendió. Es un caso extremo, pero no aislado: en una encuesta de Gartner a 3.000 candidatos (julio de 2025), 4 de cada 10 dicen usar IA durante la candidatura y un 6 % admite fraude de identidad en entrevistas. Gartner prevé que en 2028 uno de cada cuatro perfiles de candidato en el mundo podría ser falso.
+Conclusión: el formato de entrevista que dominó la última década (ejercicios de algoritmos a distancia) ha quedado en entredicho. Las empresas están respondiendo de tres formas distintas, que vemos en la siguiente slide. Fuentes: https://gizmodo.com/he-built-a-tool-to-get-around-big-techs-recruiting-process-columbia-kicked-him-out-of-school-2000581712 y https://www.hrdive.com/news/fake-job-candidates-ai/757126/</aside>
+</section>
+
+<section id="ent-estrategias">
+<div class="head"><p class="eyebrow">Empleo · 5 de 8</p><h2 class="title">Tres respuestas de las empresas</h2></div>
+<div class="grid3">
+<div class="card cream"><p class="kicker">1 · Volver a lo presencial</p><p class="ct">Google y McKinsey</p><p class="tx">Al menos una ronda en persona para comprobar que el candidato domina los fundamentos.</p></div>
+<div class="card mint"><p class="kicker">2 · Permitir la IA</p><p class="ct">Canva y Meta</p><p class="tx">La IA se usa en la entrevista, como en el trabajo real. Se evalúa cómo se usa.</p></div>
+<div class="card"><p class="kicker">3 · Reglas por fase</p><p class="ct">Anthropic</p><p class="tx">IA para pulir el CV después de un primer borrador propio. En la entrevista en directo, no, salvo que se indique.</p></div>
+</div>
+<div class="band mint"><b>Lo común:</b> ya no basta con llegar a la solución; hay que demostrar que se entiende y se puede explicar.</div>
+<p class="source">Fuentes: Entrepreneur (18 de agosto de 2025), «Google, McKinsey reintroduce in-person interviews due to AI», sobre Sundar Pichai en The Lex Fridman Podcast · entrepreneur.com/business-news/google-mckinsey-reintroduce-in-person-interviews-due-to-ai/496041 | Simon Newton, Canva Engineering (11 de junio de 2025), «Yes, you can use AI in our interviews» · canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews | TechRadar (30 de julio de 2025), «Meta is going to let candidates use AI in job interviews», a partir de 404 Media · techradar.com/pro/meta-is-going-to-let-candidates-use-ai-in-job-interviews | Fortune (21 de julio de 2025), cambio de la política de Anthropic sobre el uso de IA por los candidatos · fortune.com/2025/07/21/billion-dollar-giant-anthropic-ai-ban-hiring-policy-change-job-seekers-interview-process</p>
+<aside>Pregunta: si fuerais responsables de contratar, ¿cuál de las tres elegiríais?
+Respuesta: no hay una única respuesta, y conviven en el sector.
+Volver a lo presencial: Sundar Pichai explicó en junio de 2025 en el podcast de Lex Fridman que Google reintroduce al menos una ronda de entrevistas en persona para asegurarse de que el candidato domina los fundamentos. McKinsey pide a sus responsables al menos una reunión presencial antes de hacer una oferta.
+Permitir la IA: Canva anunció en junio de 2025 que espera que los candidatos de backend, frontend y machine learning usen herramientas como Copilot, Cursor o Claude durante la entrevista técnica. Meta empezó en julio de 2025 a probar entrevistas de programación con asistente de IA porque, según su comunicación interna, se parecen más al entorno en que trabajarán y hacen menos eficaz hacer trampas con un modelo de lenguaje.
+Reglas por fase: Anthropic prohibió primero el uso de IA en todo el proceso y en julio de 2025 lo matizó: se puede usar para mejorar el CV y la carta a partir de un primer borrador propio, y para preparar la entrevista, pero no en las entrevistas en directo ni en las pruebas para casa salvo que se indique.
+Conclusión: en los tres casos la empresa quiere lo mismo, comprobar que hay comprensión detrás de la solución. Fuentes: https://www.entrepreneur.com/business-news/google-mckinsey-reintroduce-in-person-interviews-due-to-ai/496041 · https://canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews · https://www.techradar.com/pro/meta-is-going-to-let-candidates-use-ai-in-job-interviews · https://fortune.com/2025/07/21/billion-dollar-giant-anthropic-ai-ban-hiring-policy-change-job-seekers-interview-process/</aside>
+</section>
+
+<section id="ent-canva" class="dark">
+<div class="head"><p class="eyebrow">Empleo · 6 de 8</p><h2 class="title">Qué se evalúa cuando la IA está permitida</h2></div>
+<div class="row">
+<div class="card warn"><p class="ct">Antes</p><p class="tx">Programar el Juego de la Vida de Conway: un problema cerrado, con una solución conocida.</p></div>
+<div class="card solid"><p class="ct">Ahora, en Canva</p><p class="tx">Diseñar el control de despegues y aterrizajes de un aeropuerto: ambiguo, realista y sin solución en un solo prompt.</p></div>
+</div>
+<div class="grid3">
+<div class="card"><p class="ct">Descomponer</p><p class="tx">Partir requisitos ambiguos en piezas.</p></div>
+<div class="card"><p class="ct">Decidir</p><p class="tx">Cuándo usar la IA y cuándo no.</p></div>
+<div class="card"><p class="ct">Revisar</p><p class="tx">Encontrar y corregir fallos en el código generado.</p></div>
+</div>
+<div class="band amber"><b>Shopify, 2025:</b> antes de pedir otra contratación, el equipo debe demostrar que la IA no puede hacer ese trabajo.</div>
+<p class="source">Fuentes: Simon Newton, Canva Engineering (11 de junio de 2025), «Yes, you can use AI in our interviews» · canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews | Fortune (8 de abril de 2025), memorándum de Tobi Lütke, consejero delegado de Shopify · fortune.com/2025/04/08/shopify-ceo-ai-automation-no-new-hires-tech-jobs</p>
+<aside>Esta slide resume el caso; las cuatro siguientes lo desarrollan paso a paso.
+Pregunta: si la IA puede escribir el código, ¿qué queda por evaluar en una entrevista?
+Respuesta: Canva lo explica en su blog de ingeniería. Ha sustituido la prueba clásica de fundamentos de informática por una entrevista de «programación asistida por IA». Los problemas son más complejos, ambiguos y realistas: en lugar de programar el Juego de la Vida de Conway, por ejemplo, diseñar un sistema de control de despegues y aterrizajes de un aeropuerto con mucho tráfico. Evalúan si el candidato sabe cuándo y cómo usar la IA, si descompone requisitos ambiguos, si toma buenas decisiones técnicas, si detecta y corrige fallos del código generado y si el resultado cumple los estándares de producción. Siguen evaluando fundamentos, pero dentro de ese formato.
+La franja inferior es el otro lado: en abril de 2025, Tobi Lütke, consejero delegado de Shopify, escribió en un memorándum interno que usar la IA es una expectativa básica y que, antes de pedir más personas, los equipos deben demostrar por qué la IA no puede hacer ese trabajo.
+Conclusión: el listón se mueve de escribir código a dirigir, revisar y responder de él, que es exactamente lo más difícil para alguien junior. Fuentes: https://canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews y https://fortune.com/2025/04/08/shopify-ceo-ai-automation-no-new-hires-tech-jobs/</aside>
+</section>
+
+<section id="canva-antes">
+<div class="head"><p class="eyebrow">Caso Canva · 1 de 4</p><h2 class="title">Antes: el Juego de la Vida de Conway</h2></div>
+<div class="row">
+<div class="col" style="flex:1.15">
+<p class="code-label">Una solución típica en Python</p>
+<pre class="code">from collections import Counter
+
+def paso(vivas):
+    <span class="c"># cuenta cuántas vecinas vivas tiene cada celda</span>
+    vecinos = Counter((x + dx, y + dy) for x, y in vivas
+                      for dx in (-1, 0, 1) for dy in (-1, 0, 1)
+                      if (dx, dy) != (0, 0))
+    <span class="c"># nace con 3 vecinas; sobrevive con 2 o 3</span>
+    return {c for c, n in vecinos.items()
+            if n == 3 or (n == 2 and c in vivas)}</pre>
+</div>
+<div class="col">
+<div class="card"><p class="ct">El enunciado</p><p class="tx">Una rejilla de celdas vivas o muertas. Calcula la siguiente generación con cuatro reglas fijas.</p></div>
+<div class="card cream"><p class="ct">Qué medía</p><p class="tx">Algoritmos y estructuras de datos, escribiendo todo el código a mano.</p></div>
+<div class="card mint"><p class="ct">Por qué dejó de servir</p><p class="tx">En las pruebas de Canva, la IA lo resolvía bien y documentado en segundos, a menudo con un solo prompt.</p></div>
+</div>
+</div>
+<p class="source">Fuente: Simon Newton, Canva Engineering (11 de junio de 2025), «Yes, you can use AI in our interviews» · canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews · Código: ejemplo propio del curso</p>
+<aside>Pregunta: ¿cuánto tardaría hoy un asistente de IA en resolver este ejercicio?
+Respuesta: segundos. El Juego de la Vida de Conway es un clásico de entrevista: una rejilla de celdas vivas o muertas que evoluciona con reglas fijas (una celda viva con 2 o 3 vecinas sobrevive; una muerta con exactamente 3 nace; el resto muere). La solución de la slide es nuestra, no de Canva: guarda solo las celdas vivas en un conjunto, cuenta las vecinas con un Counter y aplica las reglas en una línea. Lo hemos probado con el «parpadeador» (tres celdas en fila), que alterna entre horizontal y vertical.
+Canva cuenta en su blog que su antigua entrevista de fundamentos de informática se basaba en este tipo de problemas: algoritmos y estructuras de datos, escritos sin ayuda. En sus experimentos, las herramientas de IA resolvían estas preguntas correctamente y con buena documentación, normalmente en segundos y a menudo sin necesidad de un segundo prompt. Además, la entrevista no medía cosas que sí hace un ingeniero cada día: leer código, revisar cambios de otros o mejorar código existente. Y cada vez más candidatos usaban IA a escondidas.
+Conclusión: un ejercicio con una solución conocida y cerrada mide memoria y práctica de algoritmos, que es justo lo que la IA ya hace mejor. Fuente: https://canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews</aside>
+</section>
+
+<section id="canva-ahora" class="dark">
+<div class="head"><p class="eyebrow">Caso Canva · 2 de 4</p><h2 class="title">Ahora: «control de despegues y aterrizajes en un aeropuerto con mucho tráfico»</h2></div>
+<div class="flow">
+<div class="step"><p class="sk">1 · Preguntar</p><p class="sx">¿Cuántas pistas? ¿Emergencias? ¿Separación entre aviones?</p></div><div class="arrow"></div>
+<div class="step"><p class="sk">2 · Diseñar</p><p class="sx">Una cola con prioridades y el estado de cada pista.</p></div><div class="arrow"></div>
+<div class="step amber"><p class="sk">3 · Delegar</p><p class="sx">Pedir a la IA piezas acotadas: la cola, las pruebas.</p></div><div class="arrow"></div>
+<div class="step"><p class="sk">4 · Revisar</p><p class="sx">Leer lo generado y buscar qué falta.</p></div><div class="arrow"></div>
+<div class="step"><p class="sk">5 · Producción</p><p class="sx">Casos límite, pruebas y registro de eventos.</p></div>
+</div>
+<div class="row">
+<div class="card warn"><p class="ct">Sin una única respuesta</p><p class="tx">El enunciado es ambiguo a propósito: no se resuelve con un prompt.</p></div>
+<div class="card solid"><p class="ct">Con la IA de cada uno</p><p class="tx">Copilot, Cursor, Claude: la que el candidato use en su día a día.</p></div>
+</div>
+<p class="source">Fuente: Simon Newton, Canva Engineering (11 de junio de 2025), «Yes, you can use AI in our interviews» · canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews · Los cinco pasos son una propuesta del curso a partir de lo que Canva dice evaluar</p>
+<aside>Pregunta: ¿qué es lo primero que haríais con este enunciado?
+Respuesta: preguntar. Canva solo publica el enunciado («construye un sistema de control para gestionar despegues y aterrizajes en un aeropuerto con mucho tráfico») y dice que estos problemas son más complejos, ambiguos y realistas, y que no se resuelven con un solo prompt: exigen pensar por iteraciones, aclarar requisitos y tomar decisiones. Los cinco pasos de la slide son nuestra forma de recorrerlo, construida a partir de lo que Canva dice evaluar.
+1. Preguntar: cuántas pistas hay, si las emergencias pasan delante, qué separación mínima hay entre aviones según su tamaño, si un avión puede esperar indefinidamente.
+2. Diseñar: el núcleo es una cola con prioridades y el estado de cada pista (cuándo queda libre).
+3. Delegar: pedir a la IA piezas bien definidas, como la cola de prioridad o las pruebas, manteniendo el control del diseño completo.
+4. Revisar: leer lo que genera y buscar lo que falta; lo vemos en la siguiente slide.
+5. Producción: casos límite (todas las pistas ocupadas, dos emergencias a la vez), pruebas y un registro de qué se asignó y por qué.
+Canva deja usar la herramienta de IA que prefiera cada candidato y se lo avisa con antelación, recomendando practicar antes. Conclusión: lo que se mide es el camino, no solo el resultado. Fuente: https://canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews</aside>
+</section>
+
+<section id="canva-codigo">
+<div class="head"><p class="eyebrow">Caso Canva · 3 de 4</p><h2 class="title">El momento clave: revisar lo que propone la IA</h2></div>
+<div class="row">
+<div class="col"><p class="code-label">Funciona, pero…</p><pre class="code"><span class="c"># Propuesta de la IA</span>
+cola = sorted(aviones, key=lambda a: a.hora)
+
+def asignar(pista, avion, ahora):
+<span class="bad">    pista.libre_desde = ahora + avion.duracion</span>
+    return pista</pre>
+<div class="card cream"><p class="ct">Lo que falta</p><p class="tx">No mira si la pista está libre, ignora las emergencias y no deja separación entre aviones.</p></div></div>
+<div class="col"><p class="code-label">Después de revisar</p><pre class="code"><span class="c"># Revisado por el candidato</span>
+def prioridad(a):
+<span class="ok">    return (0 if a.emergencia else 1, a.hora, a.id)</span>
+
+def asignar(pistas, avion, ahora):
+<span class="ok">    libres = [p for p in pistas if p.libre_desde &lt;= ahora]
+    if not libres:
+        return None            # sigue en la cola</span>
+    p = libres[0]
+    p.libre_desde = (ahora + avion.duracion
+<span class="ok">                     + SEPARACION[avion.tipo])</span>
+    return p</pre></div>
+</div>
+<p class="source">Fuente: Simon Newton, Canva Engineering (11 de junio de 2025), «Yes, you can use AI in our interviews» · canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews · Código: ejemplo propio del curso, probado en Python</p>
+<aside>Pregunta: ¿qué falla en la propuesta de la izquierda?
+Respuesta: compila y parece razonable, pero tiene tres problemas. Ordena solo por hora, así que una emergencia espera su turno. Asigna la pista sin comprobar si está libre, así que dos aviones pueden acabar en la misma pista a la vez. Y no deja la separación mínima que necesita cada tipo de avión (la estela de un avión pesado obliga a esperar más). La versión de la derecha añade una prioridad (emergencias primero, luego por hora), comprueba qué pistas están libres, deja el avión en la cola si no hay ninguna y suma la separación según el tipo.
+Este código es un ejemplo nuestro, no de Canva, y lo hemos ejecutado en Python con cuatro aviones y dos pistas. Ilustra la cuarta de las cosas que Canva dice evaluar: identificar y corregir problemas en el código generado por IA. En su piloto, los candidatos que se limitaban a pedir código y aceptar lo que salía no fueron valorados como exitosos.
+Conclusión: el código de la IA suele ser plausible; el valor del ingeniero está en saber qué preguntar y qué falta. Fuente: https://canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews</aside>
+</section>
+
+<section id="canva-busca" class="dark">
+<div class="head"><p class="eyebrow">Caso Canva · 4 de 4</p><h2 class="title">Qué buscan y qué observaron en el piloto</h2></div>
+<div class="row">
+<div class="card solid"><p class="ct">Quien lo hizo bien</p><p class="tx">• Hizo buenas preguntas sobre los requisitos.<br>• Usó la IA para subtareas acotadas y mantuvo el control.<br>• Revisó y mejoró el código generado.<br>• Depuró bien cuando la IA se equivocaba.</p></div>
+<div class="card warn"><p class="ct">Quien no</p><p class="tx">• Pidió código y aceptó lo que salía.<br>• Con poca experiencia en IA: sabía programar, pero no sabía guiarla ni ver sus malas sugerencias.</p></div>
+</div>
+<div class="grid3">
+<div class="card"><p class="ct">Fundamentos</p><p class="tx">Se siguen evaluando, dentro del nuevo formato.</p></div>
+<div class="card"><p class="ct">Responsabilidad</p><p class="tx">El código es tuyo, lo escribas tú o la IA.</p></div>
+<div class="card"><p class="ct">La duda interna</p><p class="tx">Algunos ingenieros temían que fuera una sesión de «vibe coding».</p></div>
+</div>
+<p class="source">Fuente: Simon Newton, Canva Engineering (11 de junio de 2025), «Yes, you can use AI in our interviews» · canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews</p>
+<aside>Pregunta: ¿por qué alguien que sabe programar puede suspender esta entrevista?
+Respuesta: porque se evalúa otra cosa además de programar. Canva resume así lo que vio en el piloto. Los candidatos con mejores resultados hacían preguntas cuidadosas para aclarar los requisitos, usaban la IA para subtareas bien definidas sin perder el control de la solución global, revisaban críticamente y mejoraban el código generado y depuraban bien cuando la IA fallaba. Los que se limitaban a pedir código y aceptar lo que salía no fueron valorados como exitosos. Y un dato llamativo: a los candidatos con poca experiencia en IA a menudo les costaba, no por no saber programar, sino porque les faltaba criterio para guiarla o para detectar sugerencias mejorables.
+Canva insiste en dos cosas: sigue evaluando fundamentos de informática dentro del nuevo formato y espera que el candidato asuma la responsabilidad completa de su código, lo haya escrito a mano o con IA. Dentro de la empresa hubo escepticismo: algunos ingenieros temían que la entrevista se convirtiera en sesiones de «vibe coding» que sustituyeran los fundamentos. Según Canva, las entrevistas resultan más interesantes para ambas partes y predicen mejor el desempeño, aunque no publica cifras.
+Conclusión: para un junior, el mensaje es doble: practicar con IA es ya parte de la preparación, pero solo sirve si va acompañado de criterio para revisar. Fuente: https://canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews</aside>
+</section>
+
+<section id="ent-junior">
+<div class="head"><p class="eyebrow">Empleo · 7 de 8</p><h2 class="title">Cómo prepararse para esa entrevista</h2></div>
+<table class="tbl">
+<tr class="hd"><th style="width:32%">Lo que piden</th><th style="width:68%">Cómo practicarlo</th></tr>
+<tr class="r1"><td>Fundamentos sin ayuda</td><td>Resolver ejercicios sin IA y explicar en voz alta por qué funcionan</td></tr>
+<tr class="r2"><td>Usar la IA con criterio</td><td>Proyectos propios con IA, anotando qué aceptas, qué cambias y por qué</td></tr>
+<tr class="r1"><td>Revisar código ajeno</td><td>Buscar fallos en código generado: seguridad, casos límite, pruebas</td></tr>
+<tr class="r2"><td>Problemas ambiguos</td><td>Empezar por preguntas y un diseño antes de escribir código</td></tr>
+<tr class="r1"><td>Ser quien dice ser</td><td>Un portfolio con decisiones explicadas, que se pueda defender en persona</td></tr>
+</table>
+<p class="question">Pregunta para el grupo: ¿cuál de estas filas practicáis menos hoy?</p>
+<p class="source">Síntesis del curso · Fuentes: Canva (2025), TechRadar y 404 Media (2025), Entrepreneur (2025), Fortune sobre Anthropic (2025), Gartner (2025) · Referencias completas al final</p>
+<aside>Pregunta: ¿cuál de estas filas practicáis menos?
+Respuesta: suele salir revisar código ajeno y explicar decisiones. Es lo que más ha subido de valor y lo que menos se entrena en clase.
+Esta tabla es una síntesis del curso, no una recomendación de una empresa concreta: cada fila sale de lo que evalúan los casos anteriores. Los fundamentos sin ayuda, de las rondas presenciales de Google y de las reglas de Anthropic. El uso de la IA con criterio, la revisión y los problemas ambiguos, de los formatos de Canva y Meta. Ser quien dice ser, del aumento del fraude que mide Gartner.
+Conclusión: la mejor preparación es la misma que pedimos en el resto del bloque: entender lo que la IA produce y poder responder de ello.</aside>
+</section>
+
 <section id="reto2" class="dark">
-<div class="head"><p class="eyebrow">Empleo · 4 de 4</p><h2 class="title">Reto 2: una puerta de entrada que no se cierre</h2></div>
+<div class="head"><p class="eyebrow">Empleo · 8 de 8</p><h2 class="title">Reto 2: una puerta de entrada que no se cierre</h2></div>
 <div class="row">
 <div class="card"><p class="kicker">Para quien empieza</p><p class="ct">Lo que la IA no automatiza</p><p class="tx">Fundamentos, depuración, diseño y entender el negocio.</p></div>
 <div class="card"><p class="kicker">Para las empresas</p><p class="ct">Mantener la cantera</p><p class="tx">Puestos junior con mentoría: los expertos de mañana empiezan hoy.</p></div>
 <div class="card"><p class="kicker">Para la formación</p><p class="ct">Enseñar con IA</p><p class="tx">Usarla como complemento, no como atajo para no aprender.</p></div>
 </div>
 <p class="question">Pregunta para el grupo: si la IA hace las tareas de entrada, ¿cómo se convierte alguien en senior?</p>
-<p class="source">Síntesis del curso · Fuentes: Brynjolfsson et al., Stanford (2025-2026), WEF (2025) · Referencias completas al final</p>
+<p class="source">Síntesis del curso · Fuentes: Brynjolfsson et al., Stanford (2025-2026), WEF (2025), Canva (2025), Entrepreneur (2025) · Referencias completas al final</p>
 <aside>Pregunta: si la IA hace las tareas de entrada, ¿cómo se convierte alguien en senior?
 Respuesta: dejad que el grupo debata. Ideas habituales: proyectos con mentoría, revisar el código que genera la IA en lugar de escribirlo, rotar por tareas de diagnóstico y depuración, participar en el diseño desde antes.
 Conclusión: el reto es colectivo. Quien empieza necesita dominar lo que la IA no hace bien; las empresas necesitan seguir formando personas, porque los perfiles con experiencia que hoy no se ven afectados salieron de esos puestos de entrada. Esta slide es una síntesis del curso, no una cita de los estudios.</aside>
@@ -837,38 +1020,45 @@ Conclusión: la comunidad académica no da por resuelto el oficio; lo ve más ne
 <tr class="r2"><td>Problemas nuevos</td><td>Agentes, paquetes y respuestas falsas</td><td>Aprueba lo irreversible y responde</td></tr>
 <tr class="r1"><td>Agenda 2030</td><td>Verificación, personas y seguridad</td><td>Se forma en esos frentes</td></tr>
 </table>
-<p class="source">Síntesis del curso a partir de todas las fuentes del bloque · Referencias completas en las tres slides siguientes</p>
+<p class="source">Síntesis del curso a partir de todas las fuentes del bloque · Referencias completas en las cuatro slides siguientes</p>
 <aside>Pregunta: ¿cuál de estos seis retos os parece más urgente en vuestro trabajo?
 Respuesta: haced una votación rápida y comparad con la del principio del bloque.
 Conclusión: la tabla resume el bloque. La columna central recoge lo que dicen los estudios citados; la derecha es nuestra lectura de lo que implica para el día a día. El hilo común: el trabajo se desplaza de escribir código a decidir, verificar y responsabilizarse de lo que se entrega. Esta slide es una síntesis del curso.</aside>
 </section>
 
 <section id="referencias-1">
-<div class="head"><p class="eyebrow">Referencias · 1 de 3</p><h2 class="title">Productividad, empleo y aprendizaje</h2></div>
-<div class="col" style="gap:14px"><p style="font-size:24px;line-height:1.35;color:#3F4B57">METR (2025), «Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity», arXiv 2507.09089 · metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">METR (2026), actualización del estudio de productividad, 24 de febrero de 2026 · metr.org/blog/2026-02-24-uplift-update</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Peng, Kalliamvakou, Cihon y Demirer (2023), «The Impact of AI on Developer Productivity: Evidence from GitHub Copilot» · arxiv.org/abs/2302.06590</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Google Cloud (2025), informe DORA «State of AI-assisted Software Development» · blog.google/technology/developers/dora-report-2025</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Brynjolfsson, Chandar y Chen (2025, act. 2026), «Canaries in the Coal Mine?», Stanford Digital Economy Lab · digitaleconomy.stanford.edu</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Foro Económico Mundial (2025), «Future of Jobs Report 2025» · weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Anthropic (2026), «How AI assistance impacts the formation of coding skills», arXiv 2601.20245 · anthropic.com/research/AI-assistance-coding-skills</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Lee et al. (2025), «The Impact of Generative AI on Critical Thinking», CHI 2025, Microsoft Research y Carnegie Mellon · microsoft.com/en-us/research/?p=1135061</p></div>
+<div class="head"><p class="eyebrow">Referencias · 1 de 4</p><h2 class="title">Productividad y aprendizaje</h2></div>
+<div class="col" style="gap:12px"><p style="font-size:22px;line-height:1.3;color:#3F4B57">METR (2025), «Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity», arXiv 2507.09089 · metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">METR (2026), actualización del estudio de productividad, 24 de febrero de 2026 · metr.org/blog/2026-02-24-uplift-update</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Peng, Kalliamvakou, Cihon y Demirer (2023), «The Impact of AI on Developer Productivity: Evidence from GitHub Copilot» · arxiv.org/abs/2302.06590</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Google Cloud (2025), informe DORA «State of AI-assisted Software Development» · blog.google/technology/developers/dora-report-2025</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Anthropic (2026), «How AI assistance impacts the formation of coding skills», arXiv 2601.20245 · anthropic.com/research/AI-assistance-coding-skills</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Lee et al. (2025), «The Impact of Generative AI on Critical Thinking», CHI 2025, Microsoft Research y Carnegie Mellon · microsoft.com/en-us/research/?p=1135061</p></div>
 <p class="source">Ingeniería informática en la era de la IA · Referencias completas</p>
-<aside>Lista completa de fuentes de los temas 1 a 3. Cada slide lleva en su pie la referencia que usa y, en las notas, el enlace completo.</aside>
+<aside>Fuentes de los temas 1 y 3.</aside>
 </section>
 
 <section id="referencias-2">
-<div class="head"><p class="eyebrow">Referencias · 2 de 3</p><h2 class="title">Seguridad y datos</h2></div>
-<div class="col" style="gap:14px"><p style="font-size:24px;line-height:1.35;color:#3F4B57">Perry, Srivastava, Kumar y Boneh (2023), «Do Users Write More Insecure Code with AI Assistants?», ACM CCS 2023 · arxiv.org/abs/2211.03622</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Veracode (2025), «2025 GenAI Code Security Report», nota de prensa del 30 de julio de 2025 · veracode.com/blog/genai-code-security-report</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Stack Overflow (2025), «2025 Developer Survey», más de 49.000 respuestas · survey.stackoverflow.co/2025</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">The Pragmatic Engineer (2025), «Stack Overflow is almost dead» · blog.pragmaticengineer.com/stack-overflow-is-almost-dead</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Slashdot (5 de enero de 2026), datos de Stack Exchange Data Explorer · developers.slashdot.org/story/26/01/05/1431212</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">del Rio-Chanona, Laurentsyeva y Wachs (2024), «Large language models reduce public knowledge sharing on online Q&A platforms», PNAS Nexus 3(9) · inet.ox.ac.uk</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Shumailov et al. (2024), «AI models collapse when trained on recursively generated data», Nature 631 · nature.com/articles/s41586-024-07566-y</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Gerstgrasser et al. (2024), «Is Model Collapse Inevitable? Breaking the Curse of Recursion…», arXiv 2404.01413 · arxiv.org/abs/2404.01413</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Villalobos et al. (2024), «Will we run out of data? Limits of LLM scaling based on human-generated data», ICML 2024 · epoch.ai</p></div>
+<div class="head"><p class="eyebrow">Referencias · 2 de 4</p><h2 class="title">Empleo y entrevistas</h2></div>
+<div class="col" style="gap:12px"><p style="font-size:22px;line-height:1.3;color:#3F4B57">Brynjolfsson, Chandar y Chen (2025, act. 2026), «Canaries in the Coal Mine?», Stanford Digital Economy Lab · digitaleconomy.stanford.edu</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Foro Económico Mundial (2025), «Future of Jobs Report 2025» · weforum.org/stories/2025/01/future-of-jobs-report-2025-the-fastest-growing-and-declining-jobs y weforum.org/publications/the-future-of-jobs-report-2025/in-full/3-skills-outlook</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Gizmodo (27 de marzo de 2025), «He built a tool to get around Big Tech's recruiting process. Columbia kicked him out of school» · gizmodo.com/he-built-a-tool-to-get-around-big-techs-recruiting-process-columbia-kicked-him-out-of-school-2000581712</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Gartner (31 de julio de 2025), encuesta a 3.000 candidatos, resumida en HR Dive, «By 2028, 1 in 4 candidate profiles will be fake» · hrdive.com/news/fake-job-candidates-ai/757126</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Entrepreneur (18 de agosto de 2025), «Google, McKinsey reintroduce in-person interviews due to AI», sobre Sundar Pichai en The Lex Fridman Podcast · entrepreneur.com/business-news/google-mckinsey-reintroduce-in-person-interviews-due-to-ai/496041</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Simon Newton, Canva Engineering (11 de junio de 2025), «Yes, you can use AI in our interviews» · canva.dev/blog/engineering/yes-you-can-use-ai-in-our-interviews</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">TechRadar (30 de julio de 2025), «Meta is going to let candidates use AI in job interviews», a partir de 404 Media · techradar.com/pro/meta-is-going-to-let-candidates-use-ai-in-job-interviews</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Fortune (21 de julio de 2025), cambio de la política de Anthropic sobre el uso de IA por los candidatos · fortune.com/2025/07/21/billion-dollar-giant-anthropic-ai-ban-hiring-policy-change-job-seekers-interview-process</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Fortune (8 de abril de 2025), memorándum de Tobi Lütke, consejero delegado de Shopify · fortune.com/2025/04/08/shopify-ceo-ai-automation-no-new-hires-tech-jobs</p></div>
 <p class="source">Ingeniería informática en la era de la IA · Referencias completas</p>
-<aside>Lista completa de fuentes de los temas 4 y 5.</aside>
+<aside>Fuentes del tema 2, incluidas las entrevistas técnicas.</aside>
 </section>
 
 <section id="referencias-3">
-<div class="head"><p class="eyebrow">Referencias · 3 de 3</p><h2 class="title">Problemas nuevos y agenda 2030</h2></div>
-<div class="col" style="gap:14px"><p style="font-size:24px;line-height:1.35;color:#3F4B57">Spracklen et al. (2025), «We Have a Package for You! A Comprehensive Analysis of Package Hallucinations by Code Generating LLMs», USENIX Security 2025 · usenix.org</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">PC Gamer (21 de julio de 2025) y eWeek (julio de 2025), sobre el agente de Replit y Jason Lemkin · pcgamer.com</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">TechRadar (julio de 2025), «Amazon’s AI coding agent was hacked» · techradar.com/pro/amazon-ai-coding-agent-hacked-to-inject-data-wiping-commands</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">The Register (21 de enero de 2026), «Curl shutters bug bounty program…», y The New Stack (enero de 2026) · theregister.com/2026/01/21/curl_ends_bug_bounty</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Moffatt v. Air Canada, 2024 BCCRT 149, Tribunal de Resolución Civil de Columbia Británica, 14 de febrero de 2024; resumen de la American Bar Association · americanbar.org</p><p style="font-size:24px;line-height:1.35;color:#3F4B57">Pezzè, Abrahão, Penzenstadler, Poshyvanyk, Roychoudhury y Yue (2025), «A 2030 Roadmap for Software Engineering», ACM TOSEM 34(5) · doi.org/10.1145/3731559</p></div>
+<div class="head"><p class="eyebrow">Referencias · 3 de 4</p><h2 class="title">Seguridad y datos</h2></div>
+<div class="col" style="gap:12px"><p style="font-size:22px;line-height:1.3;color:#3F4B57">Perry, Srivastava, Kumar y Boneh (2023), «Do Users Write More Insecure Code with AI Assistants?», ACM CCS 2023 · arxiv.org/abs/2211.03622</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Veracode (2025), «2025 GenAI Code Security Report», nota de prensa del 30 de julio de 2025 · veracode.com/blog/genai-code-security-report</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Stack Overflow (2025), «2025 Developer Survey», más de 49.000 respuestas · survey.stackoverflow.co/2025</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">The Pragmatic Engineer (2025), «Stack Overflow is almost dead» · blog.pragmaticengineer.com/stack-overflow-is-almost-dead</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Slashdot (5 de enero de 2026), datos de Stack Exchange Data Explorer · developers.slashdot.org/story/26/01/05/1431212</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">del Rio-Chanona, Laurentsyeva y Wachs (2024), «Large language models reduce public knowledge sharing on online Q&A platforms», PNAS Nexus 3(9) · inet.ox.ac.uk</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Shumailov et al. (2024), «AI models collapse when trained on recursively generated data», Nature 631 · nature.com/articles/s41586-024-07566-y</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Gerstgrasser et al. (2024), «Is Model Collapse Inevitable? Breaking the Curse of Recursion…», arXiv 2404.01413 · arxiv.org/abs/2404.01413</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Villalobos et al. (2024), «Will we run out of data? Limits of LLM scaling based on human-generated data», ICML 2024 · epoch.ai</p></div>
 <p class="source">Ingeniería informática en la era de la IA · Referencias completas</p>
-<aside>Lista completa de fuentes de los temas 6 y 7.</aside>
+<aside>Fuentes de los temas 4 y 5.</aside>
+</section>
+
+<section id="referencias-4">
+<div class="head"><p class="eyebrow">Referencias · 4 de 4</p><h2 class="title">Problemas nuevos y agenda 2030</h2></div>
+<div class="col" style="gap:12px"><p style="font-size:22px;line-height:1.3;color:#3F4B57">Spracklen et al. (2025), «We Have a Package for You! A Comprehensive Analysis of Package Hallucinations by Code Generating LLMs», USENIX Security 2025 · usenix.org</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">PC Gamer (21 de julio de 2025) y eWeek (julio de 2025), sobre el agente de Replit y Jason Lemkin · pcgamer.com</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">TechRadar (julio de 2025), «Amazon’s AI coding agent was hacked» · techradar.com/pro/amazon-ai-coding-agent-hacked-to-inject-data-wiping-commands</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">The Register (21 de enero de 2026), «Curl shutters bug bounty program…», y The New Stack (enero de 2026) · theregister.com/2026/01/21/curl_ends_bug_bounty</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Moffatt v. Air Canada, 2024 BCCRT 149, Tribunal de Resolución Civil de Columbia Británica, 14 de febrero de 2024; resumen de la American Bar Association · americanbar.org</p><p style="font-size:22px;line-height:1.3;color:#3F4B57">Pezzè, Abrahão, Penzenstadler, Poshyvanyk, Roychoudhury y Yue (2025), «A 2030 Roadmap for Software Engineering», ACM TOSEM 34(5) · doi.org/10.1145/3731559</p></div>
+<p class="source">Ingeniería informática en la era de la IA · Referencias completas</p>
+<aside>Fuentes de los temas 6 y 7.</aside>
 </section>
 
 <section id="cierre" class="teal statement">
 <p class="eyebrow">Agenda 2030 · 3 de 3 · Cierre</p>
 <h1 class="hero">La IA cambia el trabajo. El criterio sigue siendo nuestro.</h1>
 <p class="lead-big">Volved a la lista del principio: ¿qué parte del trabajo del ingeniero añadiríais ahora?</p>
-<p class="source">Ingeniería informática en la era de la IA · Referencias completas en las tres slides anteriores</p>
+<p class="source">Ingeniería informática en la era de la IA · Referencias completas en las cuatro slides anteriores</p>
 <aside>Pregunta: ¿qué añadiríais ahora a la lista de lo que sigue siendo trabajo del ingeniero?
 Respuesta: recuperad la lista de la pizarra del principio. Lo habitual es que se añadan: medir, revisar, enseñar a otros, compartir conocimiento, decidir qué no automatizar.
 Conclusión: los estudios no describen un ingeniero sustituido, sino uno con más responsabilidad sobre lo que se entrega. Fuentes principales del bloque: METR (2025 y 2026), Peng et al. (2023), DORA 2025, Brynjolfsson et al. (Stanford), WEF 2025, Anthropic (2026), Lee et al. (CHI 2025), Perry et al. (ACM CCS 2023), Stack Overflow Developer Survey 2025, del Rio-Chanona et al. (PNAS Nexus 2024), Shumailov et al. (Nature 2024), Gerstgrasser et al. (2024), Villalobos et al. (ICML 2024) y Pezzè et al. (ACM TOSEM 2025).</aside>
