@@ -1,6 +1,6 @@
 # Curso Big Data e IA · CENIF
 
-Material del curso de 20 horas (BOE-A-2021-7686). Este repositorio recoge los **Bloques 1 a 3** (fundamentos de Big Data, tratamiento de datos con Python y Spark en Databricks) y el **bloque de IA** (slides y prácticas de aprendizaje por refuerzo y MCP).
+Material del curso de 20 horas (BOE-A-2021-7686). Este repositorio recoge los **Bloques 1 a 3** (fundamentos de Big Data, tratamiento de datos con Python y Spark en Databricks), el **bloque de IA** (slides y prácticas de aprendizaje por refuerzo y MCP) y un bloque sobre **la ingeniería informática en la era de la IA**. En las carpetas `proposals/` hay material complementario de los bloques 4 a 7, para quien quiera seguir por su cuenta.
 
 Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos abiertos de StatsBomb) en los bloques 1 y 2, y **cambios de Wikipedia en tiempo real** (Wikimedia EventStreams) en el bloque 3.
 
@@ -8,14 +8,16 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
 
 | Carpeta | Qué hay |
 |---|---|
-| `slides/` | Diapositivas del curso: PDF (`Big-Data-e-IA_Bloques-1-y-2.pdf`) y versión web (`diapositivas.html`, ábrela en el navegador). Bloque de IA: `Bloque-IA_Update.pdf` (129 slides) y `Bloque-IA_Update.html` (versión web, funciona sin conexión). |
-| `notebooks/` | Cuadernos de práctica `01`, `03`–`05` (para Google Colab) el notebook de Databricks del Bloque 3 (`02_BigData_Spark_Databricks_Wikimedia`, en `.py` e `.ipynb`) la demo de aprendizaje por refuerzo del bloque de IA (`06_IA_Aprendizaje_Refuerzo`, en versión Databricks y local) y el servidor MCP de práctica (`07_IA_Servidor_MCP_Sporting.py`). |
+| `slides/` | Diapositivas trabajadas en clase, cada una en PDF y en versión web (`.html`, se abre en el navegador y funciona sin conexión): `Big-Data-e-IA_Bloques-1-y-2` (bloques 1 y 2), `Bloque-3_Spark-Databricks` (99 slides), `Bloque-IA_Update` (129 slides) e `Ingenieria-informatica-era-IA` (37 slides, retos de la profesión con IA). |
+| `slides/proposals/` | Material complementario que no se ha trabajado en clase: `Bloque-4_Visualizacion-BI`, `Bloque-5_Fundamentos-IA`, `Bloque-6_Machine-Learning`, `Bloque-7_Proyecto-integrador` y `Big-Data_Fundamentos-borrador` (versión inicial, incompleta, de los bloques 1 y 2). |
+| `notebooks/` | Prácticas trabajadas: `01` (Google Colab), el notebook de Databricks del Bloque 3 (`02_BigData_Spark_Databricks_Wikimedia`, en `.py` e `.ipynb`), la demo de aprendizaje por refuerzo (`06_IA_Aprendizaje_Refuerzo`, versión Databricks y local) y el servidor MCP de práctica (`07_IA_Servidor_MCP_Sporting.py`). |
+| `notebooks/proposals/` | Prácticas complementarias de los bloques no trabajados: `02_BigData_Databricks_Spark_Sporting.py` y `02b_BigData_Streaming_Databricks` (versión anterior del Bloque 3 con datos del Sporting y streaming), `03_BigData_Visualizacion_BI_Sporting.ipynb` y `03b_BI_en_Databricks.py` (Bloque 4), `04_IA_MachineLearning_Sporting.ipynb` (Bloques 5 y 6) y `05_Proyecto_Integrador_Sporting.ipynb` (Bloque 7). |
 | `data/` | `sporting_partidos.csv` (38 partidos) y `sporting_eventos.csv` (≈129.000 eventos). |
 
 ## Cómo usar los cuadernos
 
 1. Entra en [Google Colab](https://colab.research.google.com) con tu cuenta de Google.
-2. **Archivo → Subir cuaderno** y elige un fichero de `notebooks/` (o **Archivo → Abrir cuaderno → GitHub** si el repositorio está publicado).
+2. **Archivo → Subir cuaderno** y elige un fichero de `notebooks/` o `notebooks/proposals/` (o **Archivo → Abrir cuaderno → GitHub** si el repositorio está publicado).
 3. Ejecuta las celdas en orden. El cuaderno 01 descarga los datos de StatsBomb y genera los CSV; si prefieres no esperar, sube los de `data/` al panel de ficheros de Colab (icono de carpeta).
 4. `02_BigData_Spark_Databricks_Wikimedia` (Bloque 3) es para Databricks Free Edition: **Workspace → Import** y elige el `.py` (o el `.ipynb`). No hay que subir ficheros: el propio notebook captura unos minutos del flujo de Wikimedia EventStreams y los guarda en un volumen. Cubre carga, filtros, agregaciones, joins, ventanas, SQL, cache, Structured Streaming (copia, filtro, conteo y ventanas) y errores típicos de Spark. Requiere acceso saliente a `stream.wikimedia.org` desde tu espacio de trabajo; en Free Edition los flujos solo funcionan con `trigger(availableNow=True)`.
 
@@ -28,6 +30,8 @@ Casos prácticos: **Real Sporting de Gijón, temporada 2015/16** (La Liga, datos
    - Prueba sin IA: `python notebooks/07_IA_Servidor_MCP_Sporting.py --probar` lista las herramientas y las llama.
    - Inspector visual: `mcp dev notebooks/07_IA_Servidor_MCP_Sporting.py` (necesita Node.js).
    - Con un asistente como Claude Desktop: añadir un servidor MCP con el comando `python` y la ruta completa del script.
+
+7. Los cuadernos de `notebooks/proposals/` son complementarios: los `.ipynb` se abren en Colab como el 01 (necesitan los CSV de `data/`) y los `.py` se importan en Databricks como el 02.
 
 ## Datos y licencia
 
